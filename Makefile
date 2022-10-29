@@ -1,25 +1,29 @@
-BINARY=build
-CODEDIRS=./src/
-INCDIRS=./src/
+EXEC = bs.out
 
+SRCDIR = src
+OBJDIR = obj
+TESTDIR = tests
+TESTBIN = bin
 
-CC=gcc
-OPT=-O0
-DEPFLAGS=-MP -MD
-CFLAGS=-Wall -Wextra -g $(foreach D,$(INCDIRS),-I$(D)) $(OPT) $(DEPFLAGS)
+SRCS = $(wildcard $(SRCDIR)/*.c)
+SRCS_NOMAIN = $(wildcard $(SRCDIR)/bs_*.c)
+OBJS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS))
+OBJS_NOMAIN = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCS_NOMAIN))
+TESTS = $(wildcard $(TESTDIR)/*.c)
+TESTEXEC = $(patsubst $(TESTDIR)/%.c,$(TESTDIR)/$(TESTBIN)/%,$(TESTS))
 
-CFILES=$(foreach D,$(CODEDIRS), $(wildcard $(D)/*.c))
+CFLAGS = -g -Wall
+INCL = -I../include
 
-OBJECTS=$(patsubst %.c,%.o,$(CFILES))
-DEPFILES=$(patsubst %.c,%.d,$(CFILES))
+build: $(EXEC)
+test: $(OBJS_NOMAIN) $(TESTEXEC)
+	for test in $(TESTEXEC) ; do ./$$test ; done
 
-all: $(BINARY)
+$(TESTDIR)/$(TESTBIN)/%: $(TESTDIR)/%.c
+	$(CC) $(CFLAGS) $< $(OBJS_NOMAIN) -o $@
 
-$(BINARY): $(OBJECTS)
+$(EXEC): $(OBJS)
 	$(CC) -o $@ $^
 
-%.o:%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-clean:
-	rm -rf $(BINARY) $(OBJECTS) $(DEPFILES)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
