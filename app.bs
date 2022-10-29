@@ -1,0 +1,2 @@
+>> << != & && == += -= -- ++;:,. "Hallo Welt"  .0000f 10 10.0 10.0f 10f for while var val fn struct
+super string u_int16 u_int32 u_int8
