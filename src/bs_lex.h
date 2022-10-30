@@ -72,6 +72,7 @@ typedef struct {
 
 
 void bs_lex_init(const char* source);
+void bs_lex_free();
 bs_token next_token(void);
 
 #endif

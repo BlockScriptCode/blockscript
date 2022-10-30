@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "bs_lex.h"
 
 
 typedef struct {
+    const char* file_start;
     const char* start;
     const char* current;
     int line;
@@ -237,8 +239,16 @@ static bs_token string() {
 //--------------------------------------
 // Public Functions
 void bs_lex_init(const char* source) {
+    lexer.file_start = source;
     lexer.start = source;
     lexer.current = source;
+    lexer.line = 1;
+}
+
+void bs_lex_free() {
+    lexer.file_start = NULL;
+    lexer.start = NULL;
+    lexer.current = NULL;
     lexer.line = 1;
 }
 
