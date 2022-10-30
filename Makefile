@@ -20,7 +20,7 @@ test: $(OBJDIR) $(TESTDIR)/$(TESTBIN) $(OBJS_NOMAIN) $(TESTEXEC)
 	for test in $(TESTEXEC) ; do ./$$test ; done
 
 clean: 
-	rm -rf $(OBJS) $(TESTEXEC) $(EXEC) $(TESTDIR)/$(TESTBIN)/*
+	rm -rf $(OBJS) $(TESTEXEC) $(EXEC) $(TESTDIR)/$(TESTBIN)/* $(TESTDIR)/$(TESTBIN) $(OBJDIR)
 
 $(TESTDIR)/$(TESTBIN)/%: $(TESTDIR)/%.c
 	$(CC) $(CFLAGS) $< $(OBJS_NOMAIN) -o $@
