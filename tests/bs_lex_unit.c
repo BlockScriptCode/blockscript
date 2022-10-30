@@ -2,7 +2,7 @@
 #include "../include/acutest.h"
 
 
-void test_should_identify_single_character_tokens(void) {
+void should_identify_single_character_tokens(void) {
     // given
     const char * source = "(){}[],.~:;?";
     bs_lex_init(source);
@@ -75,7 +75,30 @@ void test_should_identify_single_character_tokens(void) {
     bs_lex_free();
 }
 
+void should_increment_line_number_with_comments(void) {
+    // given
+    const char * source = "/*This is a \n multi line \n comment*/\n(\n//Comment\n)";
+    bs_lex_init(source);
+    // when
+    bs_token should_left_paren = next_token();
+    bs_token should_right_paren = next_token();
+    bs_token should_eof = next_token();
+    // then
+    TEST_CHECK(should_left_paren.type == TK_LEFT_PAREN);
+    TEST_CHECK(should_left_paren.line == 4);
+    TEST_CHECK(should_left_paren.length == 1);
+
+    TEST_CHECK(should_right_paren.type == TK_RIGHT_PAREN);
+    TEST_CHECK(should_right_paren.line == 6);
+    TEST_CHECK(should_left_paren.length == 1);
+
+    TEST_CHECK(should_eof.type == TK_EOF);
+    bs_lex_free();
+}
+
+
 TEST_LIST = {
-    {": Should identify '(){}[],.~:;?' as single character tokens", test_should_identify_single_character_tokens},
+    {": Should identify '(){}[],.~:;?' as single character tokens", should_identify_single_character_tokens},
+    {": Should increment line numbers in comments", should_increment_line_number_with_comments},
     {NULL, NULL}
 };
