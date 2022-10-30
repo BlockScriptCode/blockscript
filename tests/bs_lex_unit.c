@@ -4,7 +4,7 @@
 
 void should_identify_single_character_tokens(void) {
     // given
-    const char * source = "(){}[],.~:;?";
+    const char * source = "(){}[],.~:;?!";
     bs_lex_init(source);
     
     // when
@@ -20,6 +20,7 @@ void should_identify_single_character_tokens(void) {
     bs_token should_colon = next_token();
     bs_token should_semi_colon = next_token();
     bs_token should_question_mark = next_token();
+    bs_token should_bang = next_token();
     bs_token should_eof = next_token();
     
     // then
@@ -70,6 +71,11 @@ void should_identify_single_character_tokens(void) {
     TEST_CHECK(should_question_mark.type == TK_QUESTION_MARK);
     TEST_CHECK(should_question_mark.line == 1);
     TEST_CHECK(should_question_mark.length == 1);
+
+    TEST_CHECK(should_bang.type == TK_BANG);
+    TEST_CHECK(should_bang.line == 1);
+    TEST_CHECK(should_bang.length == 1);
+
     TEST_CHECK(should_eof.type == TK_EOF);
 
     bs_lex_free();
@@ -224,15 +230,84 @@ void should_identify_single_or_double_character_or_tokens(void) {
     bs_lex_free();
 }
 
+void should_identify_single_or_double_character_equal_tokens(void) {
+    // given
+    const char * source = "= == =>";
+    bs_lex_init(source);
+
+    // when
+    bs_token should_equal = next_token();
+    bs_token should_equal_equal = next_token();
+    bs_token should_arrow = next_token();
+    bs_token should_eof = next_token();
+
+    // then
+    TEST_CHECK_(should_equal.type == TK_EQUAL, "Type: %d == %d", should_equal.type, TK_EQUAL);
+    TEST_CHECK_(should_equal.length == 1, "Length: %d == %d", should_equal.length, 1);
+    TEST_CHECK_(should_equal_equal.type == TK_EQUAL_EQUAL, "Type: %d == %d", should_equal_equal.type, TK_EQUAL_EQUAL);
+    TEST_CHECK_(should_equal_equal.length == 2, "Length: %d == %d", should_equal_equal.length, 2);
+    TEST_CHECK_(should_arrow.type == TK_ARROW, "Type: %d == %d", should_arrow.type, TK_ARROW);
+    TEST_CHECK_(should_arrow.length == 2, "Length: %d == %d", should_arrow.length, 2);
+    TEST_CHECK(should_eof.type == TK_EOF);
+    bs_lex_free();
+}
+
+void should_identify_single_or_double_character_greater_tokens(void) {
+    // given
+    const char * source = "> >> >=";
+    bs_lex_init(source);
+
+    // when
+    bs_token should_greater = next_token();
+    bs_token should_bit_right = next_token();
+    bs_token should_greater_equal = next_token();
+    bs_token should_eof = next_token();
+
+    // then
+    TEST_CHECK_(should_greater.type == TK_GREATER, "Type: %d == %d", should_greater.type, TK_GREATER);
+    TEST_CHECK_(should_greater.length == 1, "Length: %d == %d", should_greater.length, 1);
+    TEST_CHECK_(should_bit_right.type == TK_BIT_SHIFT_RIGHT, "Type: %d == %d", should_bit_right.type, TK_BIT_SHIFT_RIGHT);
+    TEST_CHECK_(should_bit_right.length == 2, "Length: %d == %d", should_bit_right.length, 2);
+    TEST_CHECK_(should_greater_equal.type == TK_GREATER_EQUAL, "Type: %d == %d", should_greater_equal.type, TK_GREATER_EQUAL);
+    TEST_CHECK_(should_greater_equal.length == 2, "Length: %d == %d", should_greater_equal.length, 2);
+    TEST_CHECK(should_eof.type == TK_EOF);
+    bs_lex_free();
+}
+
+void should_identify_single_or_double_character_less_tokens(void) {
+    // given
+    const char * source = "< << <=";
+    bs_lex_init(source);
+
+    // when
+    bs_token should_less = next_token();
+    bs_token should_bit_left = next_token();
+    bs_token should_less_equal = next_token();
+    bs_token should_eof = next_token();
+
+    // then
+    TEST_CHECK_(should_less.type == TK_LESS, "Type: %d == %d", should_less.type, TK_LESS);
+    TEST_CHECK_(should_less.length == 1, "Length: %d == %d", should_less.length, 1);
+    TEST_CHECK_(should_bit_left.type == TK_BIT_SHIFT_LEFT, "Type: %d == %d", should_bit_left.type, TK_BIT_SHIFT_LEFT);
+    TEST_CHECK_(should_bit_left.length == 2, "Length: %d == %d", should_bit_left.length, 2);
+    TEST_CHECK_(should_less_equal.type == TK_LESS_EQUAL, "Type: %d == %d", should_less_equal.type, TK_GREATER_EQUAL);
+    TEST_CHECK_(should_less_equal.length == 2, "Length: %d == %d", should_less_equal.length, 2);
+    TEST_CHECK(should_eof.type == TK_EOF);
+    bs_lex_free();
+}
+
 
 TEST_LIST = {
     {": Should increment line numbers in comments", should_increment_line_number_with_comments},
-    {": Should identify '(){}[],.~:;?' as single character tokens", should_identify_single_character_tokens},
+    {": Should identify '(){}[],.~:;?!' as single character tokens", should_identify_single_character_tokens},
     {": Should identify '- -= --' tokens", should_identify_single_or_double_character_minus_tokens},
     {": Should identify '+ += ++' tokens", should_identify_single_or_double_character_plus_tokens},
     {": Should identify '/ /=' tokens", should_identify_single_or_double_character_slash_tokens},
     {": Should identify '* *=' tokens", should_identify_single_or_double_character_star_tokens},
     {": Should identify '& && &=' tokens", should_identify_single_or_double_character_and_tokens},
     {": Should identify '| || |=' tokens", should_identify_single_or_double_character_or_tokens},
+    {": Should identify '= == =>' tokens", should_identify_single_or_double_character_equal_tokens},
+    {": Should identify '> >> >=' tokens", should_identify_single_or_double_character_greater_tokens},
+    {": Should identify '< << <=' tokens", should_identify_single_or_double_character_less_tokens},
     {NULL, NULL}
 };

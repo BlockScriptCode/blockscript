@@ -272,6 +272,7 @@ bs_token next_token() {
         case ':': return create_token(TK_COLON);
         case ';': return create_token(TK_SEMICOLON);
         case '?': return create_token(TK_QUESTION_MARK);
+        case '!': return create_token(TK_BANG);
         // single or double character tokens
         case '-': {
             switch (current())
@@ -311,7 +312,6 @@ bs_token next_token() {
                 return create_token(TK_BIT_OR);
             }
         }
-        case '!': return create_token(match('=') ? TK_BANG_EQUAL : TK_BANG);
         case '=': {
             switch (current())
             {

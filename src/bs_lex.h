@@ -8,7 +8,7 @@ typedef enum {
     TK_LEFT_PAREN, TK_RIGHT_PAREN,                      // (, ),
     TK_LEFT_BRACE, TK_RIGHT_BRACE,                      // {, },
     TK_LEFT_BRACKET, TK_RIGHT_BRACKET,                  // [, ],
-    TK_COMMA, TK_DOT, TK_BIT_NOT,                       // ,, ., ~, 
+    TK_COMMA, TK_DOT, TK_BIT_NOT, TK_BANG,              // ,, ., ~, !,
     TK_COLON, TK_SEMICOLON, TK_QUESTION_MARK,           // :, ;, ?,
    
 
@@ -19,7 +19,6 @@ typedef enum {
     TK_STAR, TK_STAR_EQUAL,                             // *, *=,
     TK_BIT_AND, TK_AND, TK_BIT_AND_EQUAL,               // &, &&, &=,
     TK_BIT_OR, TK_OR, TK_BIT_OR_EQUAL,                  // |, ||, |=, 
-    TK_BANG, TK_BANG_EQUAL,                             // !, !=,
     TK_EQUAL, TK_EQUAL_EQUAL, TK_ARROW,                 // =, ==, =>,
     TK_GREATER, TK_BIT_SHIFT_RIGHT, TK_GREATER_EQUAL,   // >, >>, >=,
     TK_LESS, TK_BIT_SHIFT_LEFT, TK_LESS_EQUAL,          // <, <<, <=,
