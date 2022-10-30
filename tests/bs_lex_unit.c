@@ -68,7 +68,7 @@ void test_should_identify_single_character_tokens(void) {
     TEST_CHECK(should_semi_colon.length == 1);
 
     TEST_CHECK(should_question_mark.type == TK_QUESTION_MARK);
-    TEST_CHECK(should_question_mark.line == 2);
+    TEST_CHECK(should_question_mark.line == 1);
     TEST_CHECK(should_question_mark.length == 1);
     TEST_CHECK(should_eof.type == TK_EOF);
 
