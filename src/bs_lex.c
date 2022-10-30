@@ -109,9 +109,8 @@ static bs_token_type check_keyword(int start, int length, const char* rest, bs_t
 
 static bs_token_type check_uint_type() {
     if (memcmp(lexer.start, "u_int", 4) == 0) {
-        printf("hallo \n");
-        printf("%c\n", lexer.start[5]);
-        if (lexer.current - lexer.start < 7 && lexer.start[5] == '8') printf("bal"); return TK_UINT8;
+ 
+        if (lexer.current - lexer.start < 7 && lexer.start[5] == '8') return TK_UINT8;
         if (lexer.current - lexer.start < 8 && lexer.start[5] == '1' && lexer.start[6] == '6') return TK_UINT16;
         if (lexer.current - lexer.start < 8 && lexer.start[5] == '3' && lexer.start[6] == '2') return TK_UINT32;
     }
