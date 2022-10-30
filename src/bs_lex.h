@@ -16,7 +16,7 @@ typedef enum {
     TK_MINUS, TK_MINUS_EQUAL, TK_MINUS_MINUS,           // -, -=, --,
     TK_PLUS, TK_PLUS_EQUAL, TK_PLUS_PLUS,               // +, +=, ++,
     TK_SLASH, TK_SLASH_EQUAL,                           // /, /=,
-    TK_STAR, TK_START_EQUAL,                            // *, *=,
+    TK_STAR, TK_STAR_EQUAL,                             // *, *=,
     TK_BIT_AND, TK_AND, TK_BIT_AND_EQUAL,               // &, &&, &=,
     TK_BIT_OR, TK_OR, TK_BIT_OR_EQUAL,                  // |, ||, |=, 
     TK_BANG, TK_BANG_EQUAL,                             // !, !=,

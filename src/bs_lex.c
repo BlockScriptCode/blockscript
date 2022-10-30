@@ -292,7 +292,7 @@ bs_token next_token() {
             }
         }
         case '/': return create_token(match('=') ? TK_SLASH_EQUAL : TK_SLASH);
-        case '*': return create_token(match('*') ? TK_START_EQUAL : TK_STAR);
+        case '*': return create_token(match('=') ? TK_STAR_EQUAL : TK_STAR);
         case '&': {
             switch (current())
             {
