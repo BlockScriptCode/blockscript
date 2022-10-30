@@ -8,14 +8,19 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: make
       run: make
-    - name: make tests
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: test
       run: make test
-    - name: make clean
+
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+    - name: clean
       run: make clean
- 
