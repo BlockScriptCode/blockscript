@@ -15,9 +15,12 @@ TESTEXEC = $(patsubst $(TESTDIR)/%.c,$(TESTDIR)/$(TESTBIN)/%,$(TESTS))
 CFLAGS = -g -Wall
 INCL = -I../include
 
-build: $(EXEC)
-test: $(OBJS_NOMAIN) $(TESTEXEC)
+build: $(OBJDIR) $(EXEC)
+test: $(OBJDIR) $(TESTDIR)/$(TESTBIN) $(OBJS_NOMAIN) $(TESTEXEC)
 	for test in $(TESTEXEC) ; do ./$$test ; done
+
+clean: 
+	rm -rf $(OBJS) $(TESTEXEC) $(EXEC) $(TESTDIR)/$(TESTBIN)/*
 
 $(TESTDIR)/$(TESTBIN)/%: $(TESTDIR)/%.c
 	$(CC) $(CFLAGS) $< $(OBJS_NOMAIN) -o $@
@@ -27,3 +30,9 @@ $(EXEC): $(OBJS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+$(TESTDIR)/$(TESTBIN):
+	mkdir $(TESTDIR)/$(TESTBIN)
