@@ -140,11 +140,11 @@ static bs_token_type identifierType() {
     {
         case 'b': return check_keyword(1, 3, "ool", TK_BOOL);
         case 'c': return check_keyword(1, 4, "lass", TK_CLASS);
-        case 'e': return check_keyword(1, 3, "lse", TK_FALSE);
+        case 'e': return check_keyword(1, 3, "lse", TK_ELSE);
         case 'i': {
             if (lexer.current - lexer.start > 1) {
                 switch (lexer.start[1]) {
-                   case 'f': return TK_IF;
+                   case 'f': return lexer.current - lexer.start == 2 ? TK_IF : TK_IDENTIFIER;
                    case 'n': return check_int_type();
                 }
             }
@@ -155,13 +155,13 @@ static bs_token_type identifierType() {
         case 's': {
             if (lexer.current - lexer.start > 1) {
                 switch (lexer.start[1]) {
-                    case 'u': return check_keyword(2, 4, "per", TK_SUPER);
+                    case 'u': return check_keyword(2, 3, "per", TK_SUPER);
                     case 't': if (lexer.current - lexer.start > 2) {
                         switch (lexer.start[2]) {
                             case 'r': if (lexer.current - lexer.start > 3) {
                                 switch (lexer.start[3]) {
                                     case 'i': return check_keyword(4, 2, "ng", TK_STRING);
-                                    case 'u': return check_keyword(4, 5, "ct", TK_STRUCT);
+                                    case 'u': return check_keyword(4, 2, "ct", TK_STRUCT);
                                 }
                             }
                         }
@@ -184,7 +184,7 @@ static bs_token_type identifierType() {
                     case 'l': return check_float_type();
                     case 'a': return check_keyword(2, 3, "lse", TK_FALSE);
                     case 'o': return check_keyword(2, 1, "r", TK_FOR);
-                    case 'n': return TK_FN;
+                    case 'n': return lexer.current - lexer.start == 2 ? TK_FN : TK_IDENTIFIER;
                 }
             }
             break;
@@ -194,12 +194,13 @@ static bs_token_type identifierType() {
             if (lexer.current - lexer.start > 1) {
                 switch (lexer.start[1]) {
                     case 'a': 
-                        if (lexer.current - lexer.start > 2) {
+                        if (lexer.current - lexer.start == 3) {
                             switch (lexer.start[2]) {
                                 case 'r': return TK_VAR;
                                 case 'l': return TK_VAL;
                             }
                         }
+                        return TK_IDENTIFIER;
                 }
             }
             break;

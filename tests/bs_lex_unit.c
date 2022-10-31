@@ -318,6 +318,81 @@ void should_identify_type_tokens(void) {
     }
 }
 
+void should_identify_values_types(void) {
+    const char * types[] = {"10", "10f", ".3", "10.3f", "\"String\""};
+    const int lengths[] = {2, 3, 2, 5, 8};
+    int start_token = 39;
+
+    for (int i = 0; i < 5; i++) {
+        // given
+        bs_lex_init(types[i]);
+
+        // when
+        bs_token token = next_token();
+        bs_token eof = next_token();
+        // then
+        TEST_CHECK_(token.type == start_token, "Type: %d == %d", token.type, start_token);
+        TEST_CHECK_(token.length == lengths[i], "Length: %d == %d", token.length, lengths[i]);
+
+        TEST_CHECK(eof.type == TK_EOF);
+        if (i == 0 || i == 3) {
+            start_token += 1;
+        }
+        
+        bs_lex_free();
+    }
+}
+
+void should_identify_reserved_words() {
+    const char * types[] = {"class", "struct", "if", "else", "true", "false",
+     "for", "while", "fn", "null", "return", "super", "this", "var", "val"};
+    const int lengths[] = {5, 6, 2, 4, 4, 5, 3, 5, 2, 4, 6, 5, 4, 3, 3};
+    int start_token = 52;
+
+    for (int i = 0; i < 15; i++) {
+        // given
+        bs_lex_init(types[i]);
+
+        // when
+        bs_token token = next_token();
+        bs_token eof = next_token();
+        // then
+        TEST_CHECK_(token.type == start_token, "Type: %d == %d", token.type, start_token);
+        TEST_CHECK_(token.length == lengths[i], "Length: %d == %d", token.length, lengths[i]);
+
+        TEST_CHECK(eof.type == TK_EOF);
+ 
+        start_token += 1;
+        
+        bs_lex_free();
+    }
+}
+
+void should_identify_identifier() {
+    const char * types[] = {"class_name", "struct4", "variable_name"};
+    const int lengths[] = {10, 7, 13};
+    int start_token = 38;
+
+    for (int i = 0; i < 3; i++) {
+        // given
+        bs_lex_init(types[i]);
+
+        // when
+        bs_token token = next_token();
+        bs_token eof = next_token();
+        // then
+        TEST_CHECK_(token.type == start_token, "Type: %d == %d", token.type, start_token);
+        TEST_CHECK_(token.length == lengths[i], "Length: %d == %d", token.length, lengths[i]);
+
+        TEST_CHECK(eof.type == TK_EOF);
+ 
+        
+        bs_lex_free();
+    }
+}
+
+
+
 
 TEST_LIST = {
     {": Should increment line numbers in comments", should_increment_line_number_with_comments},
@@ -332,5 +407,8 @@ TEST_LIST = {
     {": Should identify '> >> >=' tokens", should_identify_single_or_double_character_greater_tokens},
     {": Should identify '< << <=' tokens", should_identify_single_or_double_character_less_tokens},
     {": Should identify primitive type tokens", should_identify_type_tokens},
+    {": Should identify value types tokens", should_identify_values_types},
+    {": Should identify reserved words", should_identify_reserved_words},
+    {": Should identify identifiers", should_identify_identifier},
     {NULL, NULL}
 };
