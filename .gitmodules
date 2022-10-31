@@ -1,0 +1,3 @@
+[submodule "acutest"]
+	path = include/acutest
+	url = git@github.com:mity/acutest.git
