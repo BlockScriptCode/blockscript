@@ -34,9 +34,9 @@ typedef enum {
     TK_INT32, TK_UINT32,                                // int32, u_int32
     TK_INT16, TK_UINT16,                                // int16, u_int16,
     TK_INT8, TK_UINT8,                                  // int8, u_int8
-    TK_CHAR, TK_UCHAR,                                  // char, u_char
     TK_BOOL,                                            // bool
     TK_STRING,                                          // string
+    TK_FLOAT32, TK_FLOAT64,                             // float32, float64
 
     // Keywords
     TK_CLASS,                                           // class

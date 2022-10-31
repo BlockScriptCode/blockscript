@@ -17,7 +17,7 @@ INCL = -I../include
 
 build: $(OBJDIR) $(EXEC)
 test: $(OBJDIR) $(TESTDIR)/$(TESTBIN) $(OBJS_NOMAIN) $(TESTEXEC)
-	for test in $(TESTEXEC) ; do ./$$test ; done
+	for test in $(TESTEXEC) ; do  echo Run test from: $$test && ./$$test ; done
 
 clean: 
 	rm -rf $(OBJS) $(TESTEXEC) $(EXEC) $(TESTDIR)/$(TESTBIN)/* $(TESTDIR)/$(TESTBIN) $(OBJDIR)

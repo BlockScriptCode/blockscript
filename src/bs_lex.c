@@ -108,11 +108,29 @@ static bs_token_type check_keyword(int start, int length, const char* rest, bs_t
 }
 
 static bs_token_type check_uint_type() {
-    if (memcmp(lexer.start, "u_int", 4) == 0) {
- 
-        if (lexer.current - lexer.start < 7 && lexer.start[5] == '8') return TK_UINT8;
-        if (lexer.current - lexer.start < 8 && lexer.start[5] == '1' && lexer.start[6] == '6') return TK_UINT16;
-        if (lexer.current - lexer.start < 8 && lexer.start[5] == '3' && lexer.start[6] == '2') return TK_UINT32;
+    if (memcmp(lexer.start, "u_int", 5) == 0) {
+        if (lexer.current - lexer.start == 6 && lexer.start[5] == '8') return TK_UINT8;
+        if (lexer.current - lexer.start == 7 && lexer.start[5] == '1' && lexer.start[6] == '6') return TK_UINT16;
+        if (lexer.current - lexer.start == 7 && lexer.start[5] == '3' && lexer.start[6] == '2') return TK_UINT32;
+    }
+    return TK_IDENTIFIER;
+}
+
+static bs_token_type check_int_type() {
+    // int8 int16 int32
+    if (memcmp(lexer.start, "int", 3) == 0) {
+        if (lexer.current - lexer.start == 4 && lexer.start[3] == '8') return TK_INT8;
+        if (lexer.current - lexer.start == 5 && lexer.start[3] == '1' && lexer.start[4] == '6') return TK_INT16;
+        if (lexer.current - lexer.start == 5 && lexer.start[3] == '3' && lexer.start[4] == '2') return TK_INT32;
+    }
+    return TK_IDENTIFIER;
+}
+
+static bs_token_type check_float_type() {
+    //float32 float64
+    if (memcmp(lexer.start, "float", 4) == 0) {
+        if (lexer.current - lexer.start == 6 && lexer.start[4] == '3' && lexer.start[5] == '2') return TK_FLOAT32;
+        if (lexer.current - lexer.start == 6 && lexer.start[4] == '6' && lexer.start[5] == '4') return TK_FLOAT64;
     }
     return TK_IDENTIFIER;
 }
@@ -120,9 +138,18 @@ static bs_token_type check_uint_type() {
 static bs_token_type identifierType() {
     switch (lexer.start[0])
     {
+        case 'b': return check_keyword(1, 3, "ool", TK_BOOL);
         case 'c': return check_keyword(1, 4, "lass", TK_CLASS);
         case 'e': return check_keyword(1, 3, "lse", TK_FALSE);
-        case 'i': return check_keyword(1, 1, "f", TK_IF);
+        case 'i': {
+            if (lexer.current - lexer.start > 1) {
+                switch (lexer.start[1]) {
+                   case 'f': return TK_IF;
+                   case 'n': return check_int_type();
+                }
+            }
+            break;
+        }
         case 'n': return check_keyword(1, 3, "ull", TK_NULL);
         case 'r': return check_keyword(1, 5, "eturn", TK_RETURN);
         case 's': {
@@ -133,8 +160,8 @@ static bs_token_type identifierType() {
                         switch (lexer.start[2]) {
                             case 'r': if (lexer.current - lexer.start > 3) {
                                 switch (lexer.start[3]) {
-                                    case 'i': return check_keyword(4, 6, "ng", TK_STRING);
-                                    case 'u': return check_keyword(4, 6, "ct", TK_STRUCT);
+                                    case 'i': return check_keyword(4, 2, "ng", TK_STRING);
+                                    case 'u': return check_keyword(4, 5, "ct", TK_STRUCT);
                                 }
                             }
                         }
@@ -154,6 +181,7 @@ static bs_token_type identifierType() {
         case 'f':
             if (lexer.current - lexer.start > 1) {
                 switch (lexer.start[1]) {
+                    case 'l': return check_float_type();
                     case 'a': return check_keyword(2, 3, "lse", TK_FALSE);
                     case 'o': return check_keyword(2, 1, "r", TK_FOR);
                     case 'n': return TK_FN;

@@ -296,10 +296,32 @@ void should_identify_single_or_double_character_less_tokens(void) {
     bs_lex_free();
 }
 
+void should_identify_type_tokens(void) {
+    const char * types[] = {"int32", "u_int32", "int16", "u_int16", "int8", "u_int8", "bool", "string", "float32", "float64"};
+    const int lengths[] = {5, 7, 5, 7, 4, 6, 4, 6, 7, 7};
+    int start_token = 42;
+
+    for (int i = 0; i < 8; i++) {
+        // given
+        bs_lex_init(types[i]);
+
+        // when
+        bs_token token = next_token();
+        bs_token eof = next_token();
+        // then
+        TEST_CHECK_(token.type == start_token, "Type: %d == %d", token.type, start_token);
+        TEST_CHECK_(token.length == lengths[i], "Length: %d == %d", token.length, lengths[i]);
+
+        TEST_CHECK(eof.type == TK_EOF);
+        start_token += 1;
+        bs_lex_free();
+    }
+}
+
 
 TEST_LIST = {
     {": Should increment line numbers in comments", should_increment_line_number_with_comments},
-    {": Should identify '(){}[],.~:;?!' as single character tokens", should_identify_single_character_tokens},
+    {": Should identify '(){}[],.~:;?!' tokens", should_identify_single_character_tokens},
     {": Should identify '- -= --' tokens", should_identify_single_or_double_character_minus_tokens},
     {": Should identify '+ += ++' tokens", should_identify_single_or_double_character_plus_tokens},
     {": Should identify '/ /=' tokens", should_identify_single_or_double_character_slash_tokens},
@@ -309,5 +331,6 @@ TEST_LIST = {
     {": Should identify '= == =>' tokens", should_identify_single_or_double_character_equal_tokens},
     {": Should identify '> >> >=' tokens", should_identify_single_or_double_character_greater_tokens},
     {": Should identify '< << <=' tokens", should_identify_single_or_double_character_less_tokens},
+    {": Should identify primitive type tokens", should_identify_type_tokens},
     {NULL, NULL}
 };
