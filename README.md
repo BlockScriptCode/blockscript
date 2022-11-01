@@ -6,19 +6,22 @@ Blockscript is a general purpose scripting language which can be used to write B
 Example Bs-Script code snippet
 
 ```
-class HelloWorld {
-    static val hello : string = "Hello";
+class Hello {
+    val hello : string = "Hello"; 
+}
+
+class Greetings < Hello {
     var greeting : string;
     init(var greeting : string) {
         this.greeting = greeting;
     }
 
     say_hello() : void {
-        println(hello + " " + this.greeting + "!");
+        println(super.hello + " " + this.greeting + "!");
     }
 }
 
-val hello_world : HelloWorld = HelloWorld("Martin");
+val hello_world : Greetings = Greetings("Martin");
 
 hello_world.say_hello();
 
