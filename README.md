@@ -3,6 +3,21 @@
 Blockscript is a general purpose scripting language which can be used to write Blockchain applications.
 
 ## Grammar Backus-Naur-Form
+
+```
+expression ::= literal
+                | unary
+                | binary
+                | grouping;
+
+literal ::= INTEGER | FLOAT | STRING | "true" | "false" | null;
+grouping ::= "(" expression ")";
+unary ::= ( "-" | "!" | "~" | "++" | "--") expression;
+binary ::= expression operator expression;
+operator ::= "-" | "+" | "*" | "/" | "<<" | ">>" | "&" | "|" | "!="
+            | "==" | "<=" | ">=" | ">" | "<";
+```
+
 Example Bs-Script code snippet
 
 ```
@@ -26,10 +41,3 @@ val hello_world : Greetings = Greetings("Martin");
 hello_world.say_hello();
 
 ```
-
-program = {declaration}
-
-declaration = classDeclaration | fnDeclaration | structDeclaration
-
-typeDeclaration = 
-
