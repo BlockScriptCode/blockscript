@@ -8,21 +8,36 @@ typedef enum {
     TK_LEFT_PAREN, TK_RIGHT_PAREN,                      // (, ),
     TK_LEFT_BRACE, TK_RIGHT_BRACE,                      // {, },
     TK_LEFT_BRACKET, TK_RIGHT_BRACKET,                  // [, ],
-    TK_COMMA, TK_DOT, TK_BIT_NOT, TK_BANG,              // ,, ., ~, !,
+    TK_COMMA, TK_DOT,               // ,, ., ~, !,
     TK_COLON, TK_SEMICOLON, TK_QUESTION_MARK,           // :, ;, ?,
-   
+    TK_BIT_NOT, TK_BANG,
 
     // One or two character tokens
-    TK_MINUS, TK_MINUS_EQUAL, TK_MINUS_MINUS,           // -, -=, --,
-    TK_PLUS, TK_PLUS_EQUAL, TK_PLUS_PLUS,               // +, +=, ++,
-    TK_SLASH, TK_SLASH_EQUAL,                           // /, /=,
-    TK_STAR, TK_STAR_EQUAL,                             // *, *=,
-    TK_BIT_AND, TK_AND, TK_BIT_AND_EQUAL,               // &, &&, &=,
-    TK_BIT_OR, TK_OR, TK_BIT_OR_EQUAL,                  // |, ||, |=, 
-    TK_EQUAL, TK_EQUAL_EQUAL, TK_ARROW,                 // =, ==, =>,
-    TK_GREATER, TK_BIT_SHIFT_RIGHT, TK_GREATER_EQUAL,   // >, >>, >=,
-    TK_LESS, TK_BIT_SHIFT_LEFT, TK_LESS_EQUAL,          // <, <<, <=,
-
+    TK_MINUS,
+    TK_MINUS_MINUS,           // -, -=, --,
+    TK_PLUS, 
+    TK_PLUS_PLUS,               // +, +=, ++,
+    TK_SLASH,                          // /, /=,
+    TK_STAR,                             // *, *=,
+    TK_BIT_AND,               // &, &&, &=,
+    TK_BIT_OR,                // |, ||, |=, 
+    TK_EQUAL_EQUAL,                 // =, ==, =>,
+    TK_GREATER, 
+    TK_BIT_SHIFT_RIGHT,
+    TK_GREATER_EQUAL,   // >, >>, >=,
+    TK_LESS, 
+    TK_BIT_SHIFT_LEFT,
+    TK_LESS_EQUAL,
+    TK_MINUS_EQUAL, 
+    TK_PLUS_EQUAL, 
+    TK_SLASH_EQUAL,  
+    TK_STAR_EQUAL, 
+    TK_AND, 
+    TK_BIT_AND_EQUAL, 
+    TK_OR,
+    TK_BIT_OR_EQUAL, 
+    TK_EQUAL,      // <, <<, <=,
+    TK_ARROW, 
 
     // Literals
     TK_IDENTIFIER,                                      // [a-z|A-Z|_]+[a-z|A-Z|_|\d]*
@@ -57,9 +72,7 @@ typedef enum {
     
 
     TK_ERROR,
-    TK_EOF 
-
-
+    TK_EOF, 
 } bs_token_type;
 
 typedef struct {

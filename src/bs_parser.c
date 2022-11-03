@@ -8,44 +8,125 @@ typedef struct {
     bool panikMode;
 } bs_parser;
 
-static void bs_parser_init(bs_parser * parser) {
-    
+bs_parser parser;
+
+static bool is_end() {
+    return parser.current.type == TK_EOF;
 }
 
-static void advance() {
 
+static bs_token advance() {
+    if (!is_end()) {
+        parser.previous = parser.current;
+        parser.current = next_token();
+    } 
+    return parser.current;
 }
 
+static bs_token current() {
+    return parser.current;
+}
+
+static bs_token previous() {
+    return parser.previous;
+}
+
+static bool check(bs_token_type type) {
+    if (is_end()) return false;
+    return current().type == type;
+}
+
+static bool match(bs_token_type * tokens, int size) {
+    for (int i = 0; i< size; i++) {
+        if (check(tokens[i])) {
+            advance();
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool match_single(bs_token_type token) {
+    if (check(token)) {
+        advance();
+        return true;
+    }
+    return false;
+}
+
+/*
+<primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
+*/
 static AST * primary() {
-
+    // current: garbage next: 3
+    bs_token token = current();
+    if (match_single(TK_INT_VAL)) {
+        // current: 3 next: +
+        int value = atoi(token.start);
+        return AST_NEW(INTEGER_LITERAL, value);
+    }
 } 
-
+/*
+<unary> ::= ( "-" | "!" | "~" ) <unary> | <primary> ;
+*/
 static AST * unary() {
-
+    bs_token_type tokens[] = {TK_BANG, TK_MINUS, TK_BIT_NOT};
+    if (match(tokens, 3)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(UNARY_EXPRESSION,
+            unary(),
+            AS_AST_OPERATOR(operator),
+        );
+    }
+    return primary();
 }
-
+/*
+<factor> ::= <unary> (("*" | "/") <unary>)* ;
+*/
 static AST * factor() {
-
+    bs_token_type tokens[] = {TK_STAR, TK_SLASH};
+    AST * node = unary();
+    if (match(tokens, 2)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(
+            BINARY_EXPRESSION,
+            node,
+            unary(),
+            AS_AST_OPERATOR(operator));
+    }
+    return node;
 }
 
 /*
 <term> ::= <factor> (("-" | "+") <factor>)* ;
 */
 static AST * term() {
-
+    bs_token_type tokens[] = {TK_MINUS, TK_PLUS};
+    AST * node = factor();
+    if (match(tokens, 2)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(BINARY_EXPRESSION,
+            node, 
+            factor(),
+            AS_AST_OPERATOR(operator));
+    }
+    return node;
 }
 
 /*
 <comparison> ::= <term> ((">" | "<" | "<=" | ">=") <term>)* ;
 */
 static AST * comparison() {
+    // current: garbage next: 3
+    bs_token_type tokens[] = {TK_GREATER, TK_LESS, TK_GREATER_EQUAL, TK_LESS_EQUAL};
     AST * node = term();
-    if (match(TK_GREATER)) {
+    if (match(tokens, 4)) {
+        bs_token_type operator = previous().type;
         return AST_NEW(BINARY_EXPRESSION,
             node,
-            AST_NEW(term()),
-            operator);
-        )
+            term(),
+            AS_AST_OPERATOR(operator));
+        
     }
     return node;
 }
@@ -54,12 +135,15 @@ static AST * comparison() {
 <equality> ::= <comparison> (("==" | "!=") <comparison>)* ;
 */
 static AST * equality() {
+    // current: garbage next: 3
+    bs_token_type tokens[] = {TK_EQUAL_EQUAL};
     AST * node = comparison();
-    if (match(TK_EQUAL_EQUAL)) {
+    if (match(tokens, 1)) {
+        bs_token_type operator = previous().type;
         return AST_NEW(BINARY_EXPRESSION, 
         node, 
-        AST_NEW(comparison()),
-        operator);
+        comparison(),
+        AS_AST_OPERATOR(operator));
     }
     return node;
 }
@@ -73,7 +157,7 @@ static AST * expression() {
 
 AST * parse(const char * source) {
     bs_lex_init(source);
-
-
-    bs_lex_free(source);
+    advance(); // current: garbage next: 3
+    AST * ast = expression();
+    return ast;
 }

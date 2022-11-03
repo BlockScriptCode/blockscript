@@ -3,11 +3,16 @@
 
 #include <stdlib.h>
 #include "bs.h"
+#include "bs_lex.h"
+
+#define OPERATOR_OFFSET 11
 
 #define AST_NEW(type, ...) \
   ast_new((AST){type, {.type=(struct type){__VA_ARGS__}}})
-#define AS_INTEGER_LITERAL(ast) \
-    (ast->data.INTEGER_LITERAL)
+#define AST_DATA(ast, type) \
+    (ast->data.type)
+#define AS_AST_OPERATOR(token) \
+    (token - OPERATOR_OFFSET)
 typedef enum {
     // literals
     INTEGER_LITERAL,
@@ -23,17 +28,23 @@ typedef enum {
 } ast_type;
 
 typedef enum {
-    PLUS,
-    PLUS_PLUS,
+    BIT_NOT, 
+    BANG,
     MINUS,
     MINUS_MINUS,
-    MUL,
-    DIV,
-    MOD,
-    BIT_AND,
-    BIT_OR,
+    PLUS, 
+    PLUS_PLUS,            
+    SLASH,                      
+    STAR,               
+    BIT_AND,               
+    BIT_OR,               
+    EQUAL_EQUAL,               
+    GREATER, 
     BIT_SHIFT_RIGHT,
+    GREATER_EQUAL,  
+    LESS, 
     BIT_SHIFT_LEFT,
+    LESS_EQUAL,
 } ast_operator;
 
 typedef struct AST AST;
@@ -45,7 +56,7 @@ struct AST {
     union {
         struct INTEGER_LITERAL        {int number;}                                                 INTEGER_LITERAL;
         struct FLOAT_LITERAL          {float number;}                                               FLOAT;
-        struct UNARY_EXPRESSION       {AST * argument; bool prefix; ast_operator operator;}         UNARY_EXPRESSION;
+        struct UNARY_EXPRESSION       {AST * argument; ast_operator operator;}                      UNARY_EXPRESSION;
         struct BINARY_EXPRESSION      {AST * left; AST * right; ast_operator operator;}             BINARY_EXPRESSION;
         struct CONDITIONAL_EXPRESSION {AST * test; AST * consequent; AST * alternate;}              CONDITIONAL_EXPRESSION;
         struct EXPRESSION_STATEMENT   {AST * expression;}                                           EXPRESSION_STATEMENT; 
