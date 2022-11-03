@@ -5,17 +5,13 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```
-expression ::= literal
-                | unary
-                | binary
-                | grouping;
-
-literal ::= INTEGER | FLOAT | STRING | "true" | "false" | null;
-grouping ::= "(" expression ")";
-unary ::= ( "-" | "!" | "~" | "++" | "--") expression;
-binary ::= expression operator expression;
-operator ::= "-" | "+" | "*" | "/" | "<<" | ">>" | "&" | "|" | "!="
-            | "==" | "<=" | ">=" | ">" | "<";
+<expression> ::= <equality> ;
+<equality> ::= <comparison> (("==" | "!=") <comparison>)* ;
+<comparison> ::= <term> ((">" | "<" | "<=" | ">=") <term>)* ;
+<term> ::= <factor> (("-" | "+") <factor>)* ;
+<factor> ::= <unary> (("*" | "/") <unary>)* ;
+<unary> ::= ( "-" | "!" | "~" | "++" | "--") <unary> | <primary> ;
+<primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
 ```
 
 Example Bs-Script code snippet

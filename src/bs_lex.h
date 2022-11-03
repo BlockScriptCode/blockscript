@@ -64,7 +64,7 @@ typedef enum {
 
 typedef struct {
     bs_token_type type;
-    char* start;
+    const char* start;
     int length;
     int line;
 } bs_token;
