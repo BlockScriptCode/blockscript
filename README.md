@@ -16,22 +16,22 @@ Blockscript is a general purpose scripting language which can be used to write B
 ```
 
 ## Precendece 
-| Operator                               | Precedence                                        |
-| -------------------------------------- | ------------------------------------------------- |
-| postfix decrement and increment        | `--` `++`                                         |
-| prefix decrement and increment & unary | `--` `++` `+` `-` `!` `~` `!`                     |
-| multiplicative                         | `*` `/` `%`                                       |
-| additive                               | `+` `-`                                           |
-| shift                                  | `>>` `<<`                                         |
-| relational                             | `>` `>=` `<` `<=`                                 |
-| equality                               | `==` `!=`                                         |
-| bitwise AND                            | `&`                                               |
-| bitwise exclusive OR                   | `^`                                               |
-| bitwise inclusive OR                   | `|`                                               |
-| logical AND                            | `&&`                                              |
-| logical OR                             | `||`                                              |
-| tenary                                 | `? :`                                             |
-| assignment                             | `=` `+=` `-=` `*=` `%=` `&=` `^=` `|=` `<<=` `>>=`|
+| Operator                               | Precedence                                          |
+| -------------------------------------- | --------------------------------------------------- |
+| postfix decrement and increment        | `--` `++`                                           |
+| prefix decrement and increment & unary | `--` `++` `+` `-` `!` `~` `!`                       |
+| multiplicative                         | `*` `/` `%`                                         |
+| additive                               | `+` `-`                                             |
+| shift                                  | `>>` `<<`                                           |
+| relational                             | `>` `>=` `<` `<=`                                   |
+| equality                               | `==` `!=`                                           |
+| bitwise AND                            | `&`                                                 |
+| bitwise exclusive OR                   | `^`                                                 |
+| bitwise inclusive OR                   | `\|`                                                |
+| logical AND                            | `&&`                                                |
+| logical OR                             | `\|\|`                                              |
+| tenary                                 | `? :`                                               |
+| assignment                             | `=` `+=` `-=` `*=` `%=` `&=` `^=` `\|=` `<<=` `>>=` |
 
 
 Example Bs-Script code snippet
