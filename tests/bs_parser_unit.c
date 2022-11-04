@@ -30,6 +30,8 @@ void should_parse_complex_expressions(void) {
     // when
     AST * ast = parse(source);
     // then
+    TEST_CHECK(ast->type == BINARY_EXPRESSION);
+    TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
     printf("\n\n");
     ast_print(ast);
 }
