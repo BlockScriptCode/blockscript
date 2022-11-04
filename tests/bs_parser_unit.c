@@ -7,6 +7,8 @@ void should_parse_binary_expressions(void) {
     // when
     AST * ast = parse(source);
     // then
+    printf("\n\n");
+    ast_print(ast);
     TEST_CHECK(ast->type == BINARY_EXPRESSION);
     TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == PLUS);
     AST * top_left = AST_DATA(ast, BINARY_EXPRESSION).left;

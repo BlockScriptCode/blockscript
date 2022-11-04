@@ -65,6 +65,6 @@ struct AST {
 
 AST * ast_new(AST ast);
 void ast_free(AST *ptr);
-void print_ast(AST * ast);
+void ast_print(AST * ast);
 
 #endif
