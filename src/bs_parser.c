@@ -65,12 +65,29 @@ static AST * primary() {
         int value = atoi(token.start);
         return AST_NEW(INTEGER_LITERAL, value);
     }
-} 
+}
+
 /*
-<unary> ::= ( "-" | "!" | "~" ) <unary> | <primary> ;
+<pos-unary> ::= <primary> ("--" | "++")*
+*/
+static AST * pos_unary() {
+    bs_token_type tokens[] = {TK_MINUS_MINUS, TK_PLUS_PLUS};
+    AST * token = primary();
+    if (match(tokens, 2)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(UNARY_EXPRESSION,
+            token,
+            AS_AST_OPERATOR(operator)
+        );
+    }
+    return token;
+}
+
+/*
+<unary> ::= ( "-" | "!" | "~" | "++" | "--" ) <unary> | <primary> ;
 */
 static AST * unary() {
-    bs_token_type tokens[] = {TK_BANG, TK_MINUS, TK_BIT_NOT};
+    bs_token_type tokens[] = {TK_BANG, TK_MINUS, TK_BIT_NOT, TK_MINUS_MINUS, TK_PLUS_PLUS};
     if (match(tokens, 3)) {
         bs_token_type operator = previous().type;
         return AST_NEW(UNARY_EXPRESSION,
@@ -78,10 +95,10 @@ static AST * unary() {
             AS_AST_OPERATOR(operator),
         );
     }
-    return primary();
+    return pos_unary();
 }
 /*
-<factor> ::= <unary> (("*" | "/") <unary>)* ;
+<factor> ::= <unary> (( "*" | "/" | "%" ) <unary>)* ;
 */
 static AST * factor() {
     bs_token_type tokens[] = {TK_STAR, TK_SLASH};
@@ -114,17 +131,33 @@ static AST * term() {
 }
 
 /*
+<shift> ::= <term> (("<<" | ">>") <term>)* ;
+*/
+static AST * shift() {
+    bs_token_type tokens[] = {TK_BIT_SHIFT_LEFT, TK_BIT_SHIFT_LEFT};
+    AST * node = term();
+    if (match(tokens, 2)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(BINARY_EXPRESSION,
+            node, 
+            term(),
+            AS_AST_OPERATOR(operator));
+    }
+    return node;
+}
+
+/*
 <comparison> ::= <term> ((">" | "<" | "<=" | ">=") <term>)* ;
 */
 static AST * comparison() {
     // current: garbage next: 3
     bs_token_type tokens[] = {TK_GREATER, TK_LESS, TK_GREATER_EQUAL, TK_LESS_EQUAL};
-    AST * node = term();
+    AST * node = shift();
     if (match(tokens, 4)) {
         bs_token_type operator = previous().type;
         return AST_NEW(BINARY_EXPRESSION,
             node,
-            term(),
+            shift(),
             AS_AST_OPERATOR(operator));
         
     }
@@ -149,10 +182,54 @@ static AST * equality() {
 }
 
 /*
+<bitwise-and> ::= <equality> ("&" <equality>)* ;
+*/
+static AST * bitwise_and() {
+    bs_token_type tokens[] = {TK_BIT_AND};
+    AST * node = equality();
+    if (match(tokens, 1)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(BINARY_EXPRESSION, 
+        node, 
+        equality(),
+        AS_AST_OPERATOR(operator));
+    }
+    return node;
+}
+
+/*
+<bitwise-inc-or> ::= <bitwise-exc-or> ("|" <bitwise-exc-or>) ;
+*/
+static AST * bitwise_inc_or() {
+    bs_token_type tokens[] = {TK_BIT_OR};
+    AST * node = bitwise_and();
+    if (match(tokens, 1)) {
+        bs_token_type operator = previous().type;
+        return AST_NEW(BINARY_EXPRESSION, 
+        node, 
+        bitwise_and(),
+        AS_AST_OPERATOR(operator));
+    }
+    return node;
+}
+
+/*
+<tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;
+*/
+// static AST * tenary() {
+//     AST * test = bitwise_inc_or();
+//     if (match_single(TK_QUESTION_MARK)) {
+//         AST * consequent = expression();
+//         // consume(TK_COLON, "") 
+//     }
+// }
+
+
+/*
 <expression> ::= <equality> ;
 */
 static AST * expression() {
-    return equality();
+    return bitwise_inc_or();
 }
 
 AST * parse(const char * source) {

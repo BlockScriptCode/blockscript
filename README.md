@@ -6,7 +6,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 
 ```
 <expression> ::= <tenary> ;
-<tenary> ::= <equality> "?" <expression> ":" <expression> ;
+<tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;
 <bitwise-inc-or> ::= <bitwise-exc-or> ("|" <bitwise-exc-or>) ;
 <bitwise-exc-or> ::= <bitwise-and> ("^" <bitwise-and>)* ;
 <bitwise-and> ::= <equality> ("&" <equality>)* ;
@@ -15,7 +15,8 @@ Blockscript is a general purpose scripting language which can be used to write B
 <shift> ::= <term> (("<<" | ">>") <term>)* ;
 <term> ::= <factor> (("-" | "+") <factor>)* ;
 <factor> ::= <unary> (("*" | "/" | "%") <unary>)* ;
-<unary> ::= ( "-" | "!" | "~" ) <unary> | <primary> ;
+<pre-unary> ::= ( "-" | "!" | "~" | "++" | "--") <pre-unary> | <pos-unary> ;
+<pos-unary> ::= <primary> ("--" | "++")*
 <primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
 ```
 
