@@ -7,8 +7,6 @@ void should_parse_binary_expressions(void) {
     // when
     AST * ast = parse(source);
     // then
-    printf("\n\n");
-    ast_print(ast);
     TEST_CHECK(ast->type == BINARY_EXPRESSION);
     TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == PLUS);
     AST * top_left = AST_DATA(ast, BINARY_EXPRESSION).left;
@@ -25,7 +23,19 @@ void should_parse_binary_expressions(void) {
     TEST_CHECK(AST_DATA(right, INTEGER_LITERAL).number == 5);
 }
 
+void should_parse_complex_expressions(void) {
+    // given
+    // TODO post -- ++ doenst work
+    const char * source = "3 << 2 & 4 | ++5 * ~10";
+    // when
+    AST * ast = parse(source);
+    // then
+    printf("\n\n");
+    ast_print(ast);
+}
+
 TEST_LIST = {
     {": Should parse binary expressions", should_parse_binary_expressions},
+    {": Should parse complex binary expressions", should_parse_complex_expressions},
     {NULL, NULL}
 };
