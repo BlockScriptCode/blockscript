@@ -55,7 +55,7 @@ struct AST {
     ast_type type;
     union {
         struct INTEGER_LITERAL        {int number;}                                                 INTEGER_LITERAL;
-        struct FLOAT_LITERAL          {float number;}                                               FLOAT;
+        struct FLOAT_LITERAL          {float number;}                                               FLOAT_LITERAL;
         struct UNARY_EXPRESSION       {AST * argument; ast_operator operator;}                      UNARY_EXPRESSION;
         struct BINARY_EXPRESSION      {AST * left; AST * right; ast_operator operator;}             BINARY_EXPRESSION;
         struct CONDITIONAL_EXPRESSION {AST * test; AST * consequent; AST * alternate;}              CONDITIONAL_EXPRESSION;

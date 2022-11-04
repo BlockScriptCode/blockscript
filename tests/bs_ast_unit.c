@@ -12,6 +12,8 @@ void should_generate_ast(void) {
     TEST_CHECK(ast->type == EXPRESSION_STATEMENT);
     TEST_CHECK(ast->data.EXPRESSION_STATEMENT.expression->type == INTEGER_LITERAL);
     TEST_CHECK(ast->data.EXPRESSION_STATEMENT.expression->data.INTEGER_LITERAL.number == 10);
+
+    ast_free(ast);
 }
 
 TEST_LIST = {

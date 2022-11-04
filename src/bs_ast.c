@@ -8,26 +8,47 @@ AST * ast_new(AST ast) {
 }  
 
 void ast_free(AST *ptr) {
-  // AST ast = *ptr;
-  // switch (ast.tag) {
-  //   case AST_NUMBER: {
-  //     struct AST_NUMBER data = ast.data.AST_NUMBER;
-  //     break;
-  //   }
-  //   case AST_ADD: {
-  //     struct AST_ADD data = ast.data.AST_ADD;
-  //     ast_free(data.left);
-  //     ast_free(data.right);
-  //     break;
-  //   }
-  //   case AST_MUL: {
-  //     struct AST_MUL data = ast.data.AST_MUL;
-  //     ast_free(data.left);
-  //     ast_free(data.right);
-  //     break;
-  //   }
-  // } 
-  // free(ptr);
+  AST ast = *ptr;
+  switch (ast.type) {
+    case INTEGER_LITERAL: {
+      struct INTEGER_LITERAL data = ast.data.INTEGER_LITERAL;
+      printf("Integer: %d\n", data.number);
+      break;
+    }
+    case FLOAT_LITERAL: {
+      break;
+    }
+    case UNARY_EXPRESSION: {
+      
+      struct UNARY_EXPRESSION data = ast.data.UNARY_EXPRESSION;
+      ast_free(data.argument);
+      printf("Freed Unary Expression\n");
+      break;
+    }
+    case BINARY_EXPRESSION: {
+      struct BINARY_EXPRESSION data = ast.data.BINARY_EXPRESSION;
+      ast_free(data.left);
+      ast_free(data.right);
+      printf("Freed Binary Expression\n");
+      break;
+    }
+    case CONDITIONAL_EXPRESSION: {
+      struct CONDITIONAL_EXPRESSION data = ast.data.CONDITIONAL_EXPRESSION;
+      ast_free(data.test);
+      ast_free(data.consequent);
+      ast_free(data.alternate);
+      break;
+    }
+    case EXPRESSION_STATEMENT: {
+      struct EXPRESSION_STATEMENT data = ast.data.EXPRESSION_STATEMENT;
+      ast_free(data.expression);
+      break;
+    }
+  } 
+  if(ptr == NULL) {
+    printf("Try to free NULL Pointer\n");
+  }
+  free(ptr);
 } 
 
 static char * operator_str(ast_operator operator) {

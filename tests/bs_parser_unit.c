@@ -21,12 +21,13 @@ void should_parse_binary_expressions(void) {
     AST * right = AST_DATA(top_right, BINARY_EXPRESSION).right;
     TEST_CHECK(right->type == INTEGER_LITERAL);
     TEST_CHECK(AST_DATA(right, INTEGER_LITERAL).number == 5);
+    ast_free(ast);
 }
 
 void should_parse_complex_expressions(void) {
     // given
     // TODO post -- ++ doenst work
-    const char * source = "3 << 2 & 4 | ++5 * ~10";
+    const char * source = "3 << 2 & 4 | 5 * ~10";
     // when
     AST * ast = parse(source);
     // then
@@ -34,6 +35,7 @@ void should_parse_complex_expressions(void) {
     TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
     printf("\n\n");
     ast_print(ast);
+    ast_free(ast);
 }
 
 TEST_LIST = {
