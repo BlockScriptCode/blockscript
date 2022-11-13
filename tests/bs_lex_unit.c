@@ -297,11 +297,11 @@ void should_identify_single_or_double_character_less_tokens(void) {
 }
 
 void should_identify_type_tokens(void) {
-    const char * types[] = {"int32", "u_int32", "int16", "u_int16", "int8", "u_int8", "bool", "string", "float32", "float64"};
-    const int lengths[] = {5, 7, 5, 7, 4, 6, 4, 6, 7, 7};
+    const char * types[] = {"int64", "u_int64", "int32", "u_int32", "int16", "u_int16", "int8", "u_int8", "bool", "string", "float32", "float64"};
+    const int lengths[] = {5, 7, 5, 7, 5, 7, 4, 6, 4, 6, 7, 7};
     int start_token = 42;
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
         // given
         bs_lex_init(types[i]);
 
@@ -347,7 +347,7 @@ void should_identify_reserved_words() {
     const char * types[] = {"class", "struct", "if", "else", "true", "false",
      "for", "while", "fn", "null", "return", "super", "this", "var", "val"};
     const int lengths[] = {5, 6, 2, 4, 4, 5, 3, 5, 2, 4, 6, 5, 4, 3, 3};
-    int start_token = 52;
+    int start_token = 54;
 
     for (int i = 0; i < 15; i++) {
         // given
