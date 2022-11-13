@@ -104,7 +104,58 @@ static void print_type(ast_type type, int depth) {
 }
 
 static void print_literal(bs_value * literal_value, int depth) {
-    printf("\"data-type\": \"int\",\n");
+    bs_value value = *literal_value;
+    switch (value.type)
+    {
+    case BS_BOOL:
+      printf("\"data-type\": \"bool\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_BOOL_CVAL(value));
+      break;
+    case BS_INT8:
+      printf("\"data-type\": \"int8\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_INT8_CVAL(value));
+      break;
+    case BS_UINT8:
+      printf("\"data-type\": \"u_int8\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_UINT8_CVAL(value));
+      break;
+    case BS_INT16:
+      printf("\"data-type\": \"int16\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_INT16_CVAL(value));
+      break;
+    case BS_UINT16:
+      printf("\"data-type\": \"u_int16\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_UINT16_CVAL(value));
+      break;
+    case BS_INT32:
+      printf("\"data-type\": \"int32\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_INT32_CVAL(value));
+      break;
+    case BS_UINT32:
+      printf("\"data-type\": \"u_int32\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_UINT32_CVAL(value));
+      break;
+    case BS_INT64:
+      printf("\"data-type\": \"int64\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_INT64_CVAL(value));
+      break;
+    case BS_UINT64:
+      printf("\"data-type\": \"u_int64\",\n");
+      print_tabs(depth);
+      printf("\"value\": \"%d\"\n", AS_UINT64_CVAL(value));
+      break;
+    default:
+      break;
+    }
+    
 }
 
 static void ast_print_depth(AST * ast, int depth, bool is_last) {
@@ -114,7 +165,7 @@ static void ast_print_depth(AST * ast, int depth, bool is_last) {
   switch (current_type) {
     case LITERAL:
      
-      print_literal(AST_DATA(ast, LITERAL).value, depth);
+      print_literal(AST_DATA(ast, LITERAL).value, depth + 1);
       break;
     case UNARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));

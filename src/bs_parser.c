@@ -71,7 +71,7 @@ static AST * primary() {
     bs_token token = current();
     if (match_single(TK_INT_VAL)) {
         int8_t value = (int8_t) atoi(token.start);
-        bs_value * test = BS_VALUE(BS_INT8, value);
+        bs_value * test = BS_VALUE(BS_INT32, value);
         return AST_NEW(LITERAL, test);
     }
 }
