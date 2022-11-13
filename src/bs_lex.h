@@ -46,6 +46,7 @@ typedef enum {
     TK_STRING_VAL,                                      // ".*"
 
     // Type Keywords
+    TK_INT64, TK_UINT64,
     TK_INT32, TK_UINT32,                                // int32, u_int32
     TK_INT16, TK_UINT16,                                // int16, u_int16,
     TK_INT8, TK_UINT8,                                  // int8, u_int8

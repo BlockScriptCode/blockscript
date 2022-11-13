@@ -112,6 +112,7 @@ static bs_token_type check_uint_type() {
         if (lexer.current - lexer.start == 6 && lexer.start[5] == '8') return TK_UINT8;
         if (lexer.current - lexer.start == 7 && lexer.start[5] == '1' && lexer.start[6] == '6') return TK_UINT16;
         if (lexer.current - lexer.start == 7 && lexer.start[5] == '3' && lexer.start[6] == '2') return TK_UINT32;
+        if (lexer.current - lexer.start == 7 && lexer.start[5] == '6' && lexer.start[6] == '4') return TK_UINT64;
     }
     return TK_IDENTIFIER;
 }
@@ -122,6 +123,7 @@ static bs_token_type check_int_type() {
         if (lexer.current - lexer.start == 4 && lexer.start[3] == '8') return TK_INT8;
         if (lexer.current - lexer.start == 5 && lexer.start[3] == '1' && lexer.start[4] == '6') return TK_INT16;
         if (lexer.current - lexer.start == 5 && lexer.start[3] == '3' && lexer.start[4] == '2') return TK_INT32;
+        if (lexer.current - lexer.start == 5 && lexer.start[3] == '6' && lexer.start[4] == '4') return TK_INT64;
     }
     return TK_IDENTIFIER;
 }

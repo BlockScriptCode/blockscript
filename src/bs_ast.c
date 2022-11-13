@@ -10,12 +10,7 @@ AST * ast_new(AST ast) {
 void ast_free(AST *ptr) {
   AST ast = *ptr;
   switch (ast.type) {
-    case INTEGER_LITERAL: {
-      struct INTEGER_LITERAL data = ast.data.INTEGER_LITERAL;
-      printf("Integer: %d\n", data.number);
-      break;
-    }
-    case FLOAT_LITERAL: {
+    case LITERAL: {
       break;
     }
     case UNARY_EXPRESSION: {
@@ -87,7 +82,7 @@ static void print_type(ast_type type, int depth) {
   print_tabs(depth);
   printf("\"type\": ");
   switch (type) {
-    case INTEGER_LITERAL:
+    case LITERAL:
       printf("\"literal\",\n");
       break;
     case UNARY_EXPRESSION:
@@ -108,15 +103,18 @@ static void print_type(ast_type type, int depth) {
 
 }
 
+static void print_literal(bs_value * literal_value, int depth) {
+    printf("\"data-type\": \"int\",\n");
+}
+
 static void ast_print_depth(AST * ast, int depth, bool is_last) {
   ast_type current_type = ast->type;
   print_type(current_type, depth+1);
   print_tabs(depth+1);
   switch (current_type) {
-    case INTEGER_LITERAL:
-      printf("\"data-type\": \"int\",\n");
-      print_tabs(depth+1);
-      printf("\"value\": %d\n",AST_DATA(ast, INTEGER_LITERAL).number);
+    case LITERAL:
+     
+      print_literal(AST_DATA(ast, LITERAL).value, depth);
       break;
     case UNARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));
@@ -150,10 +148,8 @@ void ast_print(AST * ast) {
   print_type(current_type, 1);
   print_tabs(1);
   switch (current_type) {
-    case INTEGER_LITERAL:
-      printf("\"data-type\": \"int\",\n");
-      print_tabs(1);
-      printf("\"value\": %d\n",AST_DATA(ast, INTEGER_LITERAL).number);
+    case LITERAL:
+      print_literal(AST_DATA(ast, LITERAL).value, 1);
       break;
     case UNARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));

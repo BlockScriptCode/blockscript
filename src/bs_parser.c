@@ -1,5 +1,5 @@
 #include "bs_parser.h"
-
+#include "bs_value.h"
 
 typedef struct {
     bs_token previous;
@@ -54,16 +54,25 @@ static bool match_single(bs_token_type token) {
     return false;
 }
 
+static void consume(bs_token_type type, const char * error_message) {
+    if (match_single(type)) {
+        advance();
+        return;
+    }
+    parser.hadError = true;
+}
+
+
+
 /*
 <primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
 */
 static AST * primary() {
-    // current: garbage next: 3
     bs_token token = current();
     if (match_single(TK_INT_VAL)) {
-        // current: 3 next: +
-        int value = atoi(token.start);
-        return AST_NEW(INTEGER_LITERAL, value);
+        int8_t value = (int8_t) atoi(token.start);
+        bs_value * test = BS_VALUE(BS_INT8, value);
+        return AST_NEW(LITERAL, test);
     }
 }
 

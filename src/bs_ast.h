@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "bs.h"
 #include "bs_lex.h"
+#include "bs_value.h"
 
 #define OPERATOR_OFFSET 11
 
@@ -15,8 +16,7 @@
     (token - OPERATOR_OFFSET)
 typedef enum {
     // literals
-    INTEGER_LITERAL,
-    FLOAT_LITERAL,
+    LITERAL,
     // unarys
     UNARY_EXPRESSION,
     // binarys
@@ -25,6 +25,8 @@ typedef enum {
     CONDITIONAL_EXPRESSION,
 
     EXPRESSION_STATEMENT,
+
+    VARIABLE_DECLARATOR,
 } ast_type;
 
 typedef enum {
@@ -47,6 +49,14 @@ typedef enum {
     LESS_EQUAL,
 } ast_operator;
 
+
+typedef enum {
+    VAR,
+    VAL,
+} ast_variable_kind;
+
+
+
 typedef struct AST AST;
 
 struct AST {
@@ -54,12 +64,13 @@ struct AST {
     // int length;
     ast_type type;
     union {
-        struct INTEGER_LITERAL        {int number;}                                                 INTEGER_LITERAL;
-        struct FLOAT_LITERAL          {float number;}                                               FLOAT_LITERAL;
-        struct UNARY_EXPRESSION       {AST * argument; ast_operator operator;}                      UNARY_EXPRESSION;
-        struct BINARY_EXPRESSION      {AST * left; AST * right; ast_operator operator;}             BINARY_EXPRESSION;
-        struct CONDITIONAL_EXPRESSION {AST * test; AST * consequent; AST * alternate;}              CONDITIONAL_EXPRESSION;
-        struct EXPRESSION_STATEMENT   {AST * expression;}                                           EXPRESSION_STATEMENT; 
+        struct LITERAL                {bs_value * value;}                                                                     LITERAL;
+        struct UNARY_EXPRESSION       {AST * argument; ast_operator operator;}                                              UNARY_EXPRESSION;
+        struct BINARY_EXPRESSION      {AST * left; AST * right; ast_operator operator;}                                     BINARY_EXPRESSION;
+        struct CONDITIONAL_EXPRESSION {AST * test; AST * consequent; AST * alternate;}                                      CONDITIONAL_EXPRESSION;
+        struct EXPRESSION_STATEMENT   {AST * expression;}                                                                   EXPRESSION_STATEMENT; 
+        // struct VARIABLE_DECLARATOR    {AST * id; AST * init;}                                                               VARIABLE_DECLARATOR;
+        // struct VARIABLE_DECLARATION   {AST * declaration; ast_variable_type kind; ast_variable_type type;}                  VARIABLE_DECLARATION;
     } data;
 };
 
