@@ -12,7 +12,9 @@ void should_generate_ast(void) {
     // then
     TEST_CHECK(ast->type == EXPRESSION_STATEMENT);
     TEST_CHECK(ast->data.EXPRESSION_STATEMENT.expression->type == LITERAL);
-    // TEST_CHECK(ast->data.EXPRESSION_STATEMENT.expression->data.LITERAL == 10);
+    bs_value literal = *AST_DATA(ast->data.EXPRESSION_STATEMENT.expression, LITERAL).value;
+    TEST_CHECK(IS_INT8(literal));
+    TEST_CHECK(AS_INT8_CVAL(literal) == 10);
 
     ast_free(ast);
 }
