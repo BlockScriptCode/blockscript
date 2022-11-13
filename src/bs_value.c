@@ -5,3 +5,7 @@ bs_value * new_value(bs_value value) {
   if (ptr) *ptr = value;
   return ptr;
 }  
+
+void free_value(bs_value * value) {
+  free(value);
+}

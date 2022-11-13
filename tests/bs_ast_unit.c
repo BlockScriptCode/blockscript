@@ -5,7 +5,7 @@
 void should_generate_ast(void) {
     // given
     AST * ast = AST_NEW(EXPRESSION_STATEMENT,
-      AST_NEW(LITERAL, BS_VALUE(BS_INT8, 10))
+      AST_NEW(LITERAL, BS_VALUE(BS_INT32, 10))
     );
     // when
 

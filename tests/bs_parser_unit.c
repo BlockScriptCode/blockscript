@@ -26,6 +26,8 @@ void should_parse_binary_expressions(void) {
     bs_value literal3 = *AST_DATA(right, LITERAL).value;
     TEST_CHECK(IS_INT32(literal3));
     TEST_CHECK(AS_INT32_CVAL(literal3) == 5);
+    printf("\n");
+    ast_print(ast);
     ast_free(ast);
 }
 
@@ -38,7 +40,7 @@ void should_parse_complex_expressions(void) {
     // then
     TEST_CHECK(ast->type == BINARY_EXPRESSION);
     TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
-    // printf("\n\n");
+    printf("\n");
     ast_print(ast);
     ast_free(ast);
 }
@@ -52,7 +54,7 @@ void should_parse_expressions(void) {
     // then
     // TEST_CHECK(ast->type == BINARY_EXPRESSION);
     // TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
-    printf("\n\n");
+    printf("\n");
     ast_print(ast);
     ast_free(ast);
 }

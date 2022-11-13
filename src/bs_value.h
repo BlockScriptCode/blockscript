@@ -80,5 +80,6 @@ typedef struct {
 
 
 bs_value * new_value(bs_value value);
+void free_value(bs_value * value);
 
 #endif

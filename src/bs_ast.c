@@ -11,20 +11,18 @@ void ast_free(AST *ptr) {
   AST ast = *ptr;
   switch (ast.type) {
     case LITERAL: {
+      free_value(ast.data.LITERAL.value);
       break;
     }
     case UNARY_EXPRESSION: {
-      
       struct UNARY_EXPRESSION data = ast.data.UNARY_EXPRESSION;
       ast_free(data.argument);
-      printf("Freed Unary Expression\n");
       break;
     }
     case BINARY_EXPRESSION: {
       struct BINARY_EXPRESSION data = ast.data.BINARY_EXPRESSION;
       ast_free(data.left);
       ast_free(data.right);
-      printf("Freed Binary Expression\n");
       break;
     }
     case CONDITIONAL_EXPRESSION: {
@@ -40,9 +38,6 @@ void ast_free(AST *ptr) {
       break;
     }
   } 
-  if(ptr == NULL) {
-    printf("Try to free NULL Pointer\n");
-  }
   free(ptr);
 } 
 
@@ -110,47 +105,66 @@ static void print_literal(bs_value * literal_value, int depth) {
     case BS_BOOL:
       printf("\"data-type\": \"bool\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_BOOL_CVAL(value));
+      printf("\"value\": %d,\n", AS_BOOL_CVAL(value));
+      print_tabs(depth);
+      char * bool_value = AS_BOOL_CVAL(value) == 0 ? "false" : "true";
+      printf("\"raw\": \"%s\"\n", bool_value);
       break;
     case BS_INT8:
       printf("\"data-type\": \"int8\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_INT8_CVAL(value));
+      printf("\"value\": %d,\n", AS_INT8_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_INT8_CVAL(value));
       break;
     case BS_UINT8:
       printf("\"data-type\": \"u_int8\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_UINT8_CVAL(value));
+      printf("\"value\": %d,\n", AS_UINT8_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_UINT8_CVAL(value));
       break;
     case BS_INT16:
       printf("\"data-type\": \"int16\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_INT16_CVAL(value));
+      printf("\"value\": %d,\n", AS_INT16_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_INT16_CVAL(value));
       break;
     case BS_UINT16:
       printf("\"data-type\": \"u_int16\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_UINT16_CVAL(value));
+      printf("\"value\": %d,\n", AS_UINT16_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_UINT16_CVAL(value));
       break;
     case BS_INT32:
       printf("\"data-type\": \"int32\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_INT32_CVAL(value));
+      printf("\"value\": %d,\n", AS_INT32_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_INT32_CVAL(value));
       break;
     case BS_UINT32:
       printf("\"data-type\": \"u_int32\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_UINT32_CVAL(value));
+      printf("\"value\": %d,\n", AS_UINT32_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%d\"\n", AS_UINT32_CVAL(value));
       break;
     case BS_INT64:
       printf("\"data-type\": \"int64\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_INT64_CVAL(value));
+      printf("\"value\": %lld,\n", AS_INT64_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%lld\"\n", AS_INT64_CVAL(value));
       break;
     case BS_UINT64:
       printf("\"data-type\": \"u_int64\",\n");
       print_tabs(depth);
-      printf("\"value\": \"%d\"\n", AS_UINT64_CVAL(value));
+      printf("\"value\": %lld,\n", AS_UINT64_CVAL(value));
+      print_tabs(depth);
+      printf("\"raw\": \"%lld\"\n", AS_UINT64_CVAL(value));
       break;
     default:
       break;
