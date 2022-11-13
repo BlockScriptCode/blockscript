@@ -48,7 +48,7 @@ void should_parse_complex_expressions(void) {
 void should_parse_expressions(void) {
     // given
     // TODO post -- ++ doenst work
-    const char * source = "3";
+    const char * source = "val x : int8 = 10;";
     // when
     AST * ast = parse(source);
     // then
@@ -56,7 +56,7 @@ void should_parse_expressions(void) {
     // TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
     printf("\n");
     ast_print(ast);
-    ast_free(ast);
+    // ast_free(ast);
 }
 
 TEST_LIST = {

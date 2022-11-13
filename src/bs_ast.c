@@ -80,6 +80,9 @@ static void print_type(ast_type type, int depth) {
     case LITERAL:
       printf("\"literal\",\n");
       break;
+    case IDENTIFIER:
+      printf("\"identifier\",\n");
+      break;
     case UNARY_EXPRESSION:
       printf("\"unary-expression\",\n");
       break;
@@ -91,6 +94,12 @@ static void print_type(ast_type type, int depth) {
       break;
     case EXPRESSION_STATEMENT:
       printf("\"expression-statement\",\n");
+      break;
+    case VARIABLE_DECLARATION:
+      printf("\"variable-declaration\",\n");
+      break;
+    case VARIABLE_DECLARATOR:
+      printf("\"variable-declarator\",\n");
       break;
     default:
       break;
@@ -155,21 +164,36 @@ static void print_literal(bs_value * literal_value, int depth) {
     case BS_INT64:
       printf("\"data-type\": \"int64\",\n");
       print_tabs(depth);
-      printf("\"value\": %lld,\n", AS_INT64_CVAL(value));
+      printf("\"value\": %ld,\n", AS_INT64_CVAL(value));
       print_tabs(depth);
-      printf("\"raw\": \"%lld\"\n", AS_INT64_CVAL(value));
+      printf("\"raw\": \"%ld\"\n", AS_INT64_CVAL(value));
       break;
     case BS_UINT64:
       printf("\"data-type\": \"u_int64\",\n");
       print_tabs(depth);
-      printf("\"value\": %lld,\n", AS_UINT64_CVAL(value));
+      printf("\"value\": %ld,\n", AS_UINT64_CVAL(value));
       print_tabs(depth);
-      printf("\"raw\": \"%lld\"\n", AS_UINT64_CVAL(value));
+      printf("\"raw\": \"%ld\"\n", AS_UINT64_CVAL(value));
       break;
     default:
       break;
     }
     
+}
+
+static char * get_type_str(ast_variable_type type) {
+  switch (type)
+  {
+    case INT8: return "int8";
+    case UINT8: return "u_int8";
+    case INT16: return "int16";
+    case UINT16: return "u_int16";
+    case INT32: return "int32";
+    case UINT32: return "u_int32";
+    case INT64: return "int64";
+    case UINT64: return "u_int64";
+  }
+  return "unknown";
 }
 
 static void ast_print_depth(AST * ast, int depth, bool is_last) {
@@ -178,15 +202,16 @@ static void ast_print_depth(AST * ast, int depth, bool is_last) {
   print_tabs(depth+1);
   switch (current_type) {
     case LITERAL:
-     
       print_literal(AST_DATA(ast, LITERAL).value, depth + 1);
+      break;
+    case IDENTIFIER:
+      printf("\"name\": \"%.*s\",\n", AST_DATA(ast, IDENTIFIER).length, AST_DATA(ast, IDENTIFIER).name);
       break;
     case UNARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));
       print_tabs(depth+1);
       printf("\"argument\": ");
       ast_print_depth(AST_DATA(ast, UNARY_EXPRESSION).argument, depth + 1, true);
-      
       break;
     case BINARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, BINARY_EXPRESSION).operator));
@@ -197,12 +222,22 @@ static void ast_print_depth(AST * ast, int depth, bool is_last) {
       printf("\"right\": ");
       ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).right, depth + 1, true);
       break;
-    case CONDITIONAL_EXPRESSION:
-      
+    case VARIABLE_DECLARATION:
+      printf("\"kind:\" \"%s\",", AST_DATA(ast, VARIABLE_DECLARATION).kind == VAL ? "val": "var");
+      print_tabs(depth+1);
+      printf("\"type:\" \"%s\",", get_type_str(AST_DATA(ast, VARIABLE_DECLARATION).type));
+      print_tabs(depth+1);
+      printf("\"declaration\": ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATION).declaration, depth + 1, true);
       break;
-    case EXPRESSION_STATEMENT:
-      
+    case VARIABLE_DECLARATOR:
+      printf("\"id:\" ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).id, depth + 1, false);
+      print_tabs(depth+1);
+      printf("\"init\": ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, depth + 1, true);
       break;
+    
   }
   print_tabs(depth);
   printf("}%c\n", is_last ? ' ': ',');
@@ -215,6 +250,9 @@ void ast_print(AST * ast) {
   switch (current_type) {
     case LITERAL:
       print_literal(AST_DATA(ast, LITERAL).value, 1);
+      break;
+    case IDENTIFIER:
+      printf("\"name\": \"%.*s\",\n", AST_DATA(ast, IDENTIFIER).length, AST_DATA(ast, IDENTIFIER).name);
       break;
     case UNARY_EXPRESSION:
       printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));
@@ -232,11 +270,20 @@ void ast_print(AST * ast) {
       printf("\"right\": ");
       ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).right, 1, true);
       break;
-    case CONDITIONAL_EXPRESSION:
-      
+    case VARIABLE_DECLARATION:
+      printf("\"kind:\" \"%s\",\n", AST_DATA(ast, VARIABLE_DECLARATION).kind == VAL ? "val": "var");
+      print_tabs(1);
+      printf("\"type:\" \"%s\",\n", get_type_str(AST_DATA(ast, VARIABLE_DECLARATION).type));
+      print_tabs(1);
+      printf("\"declaration\": ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATION).declaration, 1, true);
       break;
-    case EXPRESSION_STATEMENT:
-      
+    case VARIABLE_DECLARATOR:
+      printf("\"id:\" ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).id, 1, false);
+      print_tabs(1);
+      printf("\"init\": ");
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, 1, true);
       break;
   }
   printf("}\n");

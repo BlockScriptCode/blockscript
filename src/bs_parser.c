@@ -56,6 +56,7 @@ static bool match_single(bs_token_type token) {
 
 static void consume(bs_token_type type, const char * error_message) {
     if (match_single(type)) {
+        printf("consumed: %d\n", type);
         advance();
         return;
     }
@@ -241,9 +242,44 @@ static AST * expression() {
     return bitwise_inc_or();
 }
 
+/*
+<var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* "=" (<expression>)* ";"
+*/
+static AST * declaration() {
+    ast_variable_kind kind;
+    ast_variable_type type;
+    if (match_single(TK_VAL)) {
+        kind = VAL;
+    } else if (match_single(TK_VAR)) {
+        kind = VAR;
+    } else {
+        return expression();
+    }
+    if (match_single(TK_IDENTIFIER)) {
+    }
+    consume(TK_IDENTIFIER, "Expect an Identifier after variable declaration.");
+    AST * identifier = AST_NEW(IDENTIFIER, parser.previous.start, parser.previous.length);
+    if (match_single(TK_COLON)) {
+        bs_token_type tokens[] = {TK_INT64, TK_UINT64, TK_INT32, TK_UINT32,                                
+                                  TK_INT16, TK_UINT16, TK_INT8, TK_UINT8, TK_BOOL, TK_STRING,                                          
+                                  TK_FLOAT32, TK_FLOAT64};
+        if (match(tokens, 12)) {
+            type = parser.previous.type - 42;
+        }
+    }
+    if (match_single(TK_EQUAL)) {
+    }
+    consume(TK_EQUAL, "Expect an '=' after variable initialization.");
+    AST * init = expression();
+    if (match_single(TK_SEMICOLON)) {
+    }
+    consume(TK_SEMICOLON, "Expect an ';' after variable initialization.");
+    return AST_NEW(VARIABLE_DECLARATION, AST_NEW(VARIABLE_DECLARATOR, identifier, init), kind, type);
+}
+
 AST * parse(const char * source) {
     bs_lex_init(source);
     advance(); // current: garbage next: 3
-    AST * ast = expression();
+    AST * ast = declaration();
     return ast;
 }

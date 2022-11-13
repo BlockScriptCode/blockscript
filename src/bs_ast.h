@@ -17,6 +17,7 @@
 typedef enum {
     // literals
     LITERAL,
+    IDENTIFIER,
     // unarys
     UNARY_EXPRESSION,
     // binarys
@@ -27,6 +28,7 @@ typedef enum {
     EXPRESSION_STATEMENT,
 
     VARIABLE_DECLARATOR,
+    VARIABLE_DECLARATION,
 } ast_type;
 
 typedef enum {
@@ -55,22 +57,30 @@ typedef enum {
     VAL,
 } ast_variable_kind;
 
-
+typedef enum {
+    INT64,
+    UINT64,
+    INT32,
+    UINT32,
+    INT16,
+    UINT16,
+    INT8,
+    UINT8,
+} ast_variable_type;
 
 typedef struct AST AST;
 
 struct AST {
-    // char * start;
-    // int length;
     ast_type type;
     union {
-        struct LITERAL                {bs_value * value;}                                                                     LITERAL;
+        struct LITERAL                {bs_value * value;}                                                                   LITERAL;
+        struct IDENTIFIER              {char * name; int length;}                                                           IDENTIFIER;
         struct UNARY_EXPRESSION       {AST * argument; ast_operator operator;}                                              UNARY_EXPRESSION;
         struct BINARY_EXPRESSION      {AST * left; AST * right; ast_operator operator;}                                     BINARY_EXPRESSION;
         struct CONDITIONAL_EXPRESSION {AST * test; AST * consequent; AST * alternate;}                                      CONDITIONAL_EXPRESSION;
         struct EXPRESSION_STATEMENT   {AST * expression;}                                                                   EXPRESSION_STATEMENT; 
-        // struct VARIABLE_DECLARATOR    {AST * id; AST * init;}                                                               VARIABLE_DECLARATOR;
-        // struct VARIABLE_DECLARATION   {AST * declaration; ast_variable_type kind; ast_variable_type type;}                  VARIABLE_DECLARATION;
+        struct VARIABLE_DECLARATOR    {AST * id; AST * init;}                                                               VARIABLE_DECLARATOR;
+        struct VARIABLE_DECLARATION   {AST * declaration; ast_variable_kind kind; ast_variable_type type;}                  VARIABLE_DECLARATION;
     } data;
 };
 
