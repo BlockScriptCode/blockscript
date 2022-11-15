@@ -51,7 +51,7 @@ void should_parse_expressions(void)
 {
     // given
     // TODO post -- ++ doenst work
-    const char *source = "val x_value = 10;";
+    const char *source = "val x = 10;";
     // when
     AST *ast = parse(source);
     // then
