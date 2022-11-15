@@ -44,7 +44,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 
 Example Bs-Script code snippet
 
-```
+```scala
 class Hello {
     val hello : string = "Hello"; 
 }
