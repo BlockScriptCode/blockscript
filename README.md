@@ -5,7 +5,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```
-<var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* "=" (<expression>)* ";"
+<var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* ("=" <expression>)* ";" ;
 <expression> ::= <tenary> ;
 <tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;
 <bitwise-inc-or> ::= <bitwise-exc-or> ("|" <bitwise-exc-or>) ;
@@ -18,6 +18,8 @@ Blockscript is a general purpose scripting language which can be used to write B
 <factor> ::= <unary> (("*" | "/" | "%") <unary>)* ;
 <pre-unary> ::= ( "-" | "!" | "~" | "++" | "--") <pre-unary> | <pos-unary> ;
 <pos-unary> ::= <primary> ("--" | "++")*
+<type-identifer> ::= "int8" | "u_int8" | "int16" | "u_int16" | "int32" | "u_int32" 
+                    | "int64" | "u_int64" | "float32" | "float64" | "bool" | "string" | IDENTIFIER ;
 <primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
 ```
 
