@@ -79,6 +79,7 @@ int main(int argc, const char *argv[])
         {
             ast_print(ast);
         }
+        ast_free(ast);
     }
     return 0;
 }

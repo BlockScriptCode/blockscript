@@ -55,11 +55,22 @@ void ast_free(AST *ptr)
     struct VARIABLE_DECLARATOR data = ast.data.VARIABLE_DECLARATOR;
     ast_free(data.id);
     ast_free(data.init);
+    break;
   }
   case VARIABLE_DECLARATION:
   {
     struct VARIABLE_DECLARATION data = ast.data.VARIABLE_DECLARATION;
     ast_free(data.declaration);
+    break;
+  }
+  case BLOCK_STMT:
+  {
+    struct BLOCK_STMT data = ast.data.BLOCK_STMT;
+    for (int i = 0; i < data.instructionCount; i++)
+    {
+      ast_free(data.instructions[i]);
+    }
+    break;
   }
   }
   free(ptr);
