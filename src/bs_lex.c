@@ -318,31 +318,28 @@ static bs_token floatDot()
 // [0-9][.[0-9]+]?f?
 static bs_token number()
 {
-    while (is_digit(peek()) && !is_end())
+    while (is_digit(current()) && !is_end())
     {
         advance();
     }
-    if (peek() == '.')
+    if (current() == '.')
     {
         advance();
-        while (is_digit(peek()) && !is_end())
+        while (is_digit(current()) && !is_end())
         {
             advance();
         }
-        if (peek() == 'f')
+        if (current() == 'f')
         {
             advance();
         }
-        advance();
         return create_token(TK_FLOAT_VAL);
     }
-    if (peek() == 'f')
+    if (current() == 'f')
     {
         advance();
-        advance();
         return create_token(TK_FLOAT_VAL);
     }
-    advance();
     return create_token(TK_INT_VAL);
 }
 

@@ -70,11 +70,22 @@ static void consume(bs_token_type type, const char *error_message)
 {
     if (match_single(type))
     {
-        printf("consumed: %d\n", type);
-        advance();
         return;
     }
+    bs_token current_tk = current();
+    error_at(current_tk.line, &current_tk, error_message);
     parser.hadError = true;
+}
+
+/*
+IDENTIFIER
+*/
+static AST *identifier()
+{
+    if (match_single(TK_IDENTIFIER))
+    {
+        return AST_NEW(IDENTIFIER, parser.previous.start, parser.previous.length);
+    }
 }
 
 /*
@@ -89,6 +100,7 @@ static AST *primary()
         bs_value *test = BS_VALUE(BS_INT32, value);
         return AST_NEW(LITERAL, test);
     }
+    return identifier();
 }
 
 /*
@@ -252,27 +264,34 @@ static AST *bitwise_inc_or()
     return node;
 }
 
+static AST *expression();
+
 /*
 <tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;
 */
-// static AST * tenary() {
-//     AST * test = bitwise_inc_or();
-//     if (match_single(TK_QUESTION_MARK)) {
-//         AST * consequent = expression();
-//         // consume(TK_COLON, "")
-//     }
-// }
+static AST *tenary()
+{
+    AST *test = bitwise_inc_or();
+    if (match_single(TK_QUESTION_MARK))
+    {
+        AST *consequent = expression();
+        consume(TK_COLON, "Expect ':' after consequent.");
+        AST *alternate = expression();
+        return AST_NEW(CONDITIONAL_EXPRESSION, test, consequent, alternate);
+    }
+    return test;
+}
 
 /*
 <expression> ::= <equality> ;
 */
 static AST *expression()
 {
-    return bitwise_inc_or();
+    return tenary();
 }
 
 /*
-<var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* "=" (<expression>)* ";"
+<var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* ("=" <expression>)* ";"
 */
 static AST *declaration()
 {
@@ -290,9 +309,6 @@ static AST *declaration()
     {
         return expression();
     }
-    if (match_single(TK_IDENTIFIER))
-    {
-    }
     consume(TK_IDENTIFIER, "Expect an Identifier after variable declaration.");
     AST *identifier = AST_NEW(IDENTIFIER, parser.previous.start, parser.previous.length);
     if (match_single(TK_COLON))
@@ -305,22 +321,41 @@ static AST *declaration()
             type = parser.previous.type - 42;
         }
     }
+    AST *init = NULL;
     if (match_single(TK_EQUAL))
     {
-    }
-    consume(TK_EQUAL, "Expect an '=' after variable initialization.");
-    AST *init = expression();
-    if (match_single(TK_SEMICOLON))
-    {
+        init = expression();
     }
     consume(TK_SEMICOLON, "Expect an ';' after variable initialization.");
     return AST_NEW(VARIABLE_DECLARATION, AST_NEW(VARIABLE_DECLARATOR, identifier, init), kind, type);
+}
+
+AST *block_stmt()
+{
+
+    if (match_single(TK_LEFT_BRACE))
+    {
+
+        AST **instructions = NULL;
+        int instructionCount = 0;
+        while (parser.current.type != TK_RIGHT_BRACE && parser.current.type != TK_EOF)
+        {
+            AST *instruction = block_stmt();
+            instructionCount += 1;
+            instructions = (AST **)realloc(instructions, instructionCount * (sizeof(AST *)));
+            instructions[instructionCount - 1] = instruction;
+        }
+
+        consume(TK_RIGHT_BRACE, "Expect '}' at the end of a block.");
+        return AST_NEW(BLOCK_STMT, instructionCount, instructions);
+    }
+    return declaration();
 }
 
 AST *parse(const char *source)
 {
     bs_lex_init(source);
     advance(); // current: garbage next: 3
-    AST *ast = declaration();
+    AST *ast = block_stmt();
     return ast;
 }

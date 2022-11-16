@@ -332,11 +332,11 @@ void should_identify_type_tokens(void)
 
 void should_identify_values_types(void)
 {
-    const char *types[] = {"10", "10f", ".3", "10.3f", "\"String\""};
-    const int lengths[] = {2, 3, 2, 5, 8};
+    const char *types[] = {"1", "10", "10f", ".3", "10.3f", "\"String\"", "\"1\""};
+    const int lengths[] = {1, 2, 3, 2, 5, 8, 3};
     int start_token = 39;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 7; i++)
     {
         // given
         bs_lex_init(types[i]);
@@ -349,7 +349,7 @@ void should_identify_values_types(void)
         TEST_CHECK_(token.length == lengths[i], "Length: %d == %d", token.length, lengths[i]);
 
         TEST_CHECK(eof.type == TK_EOF);
-        if (i == 0 || i == 3)
+        if (i == 1 || i == 4)
         {
             start_token += 1;
         }

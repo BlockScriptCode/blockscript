@@ -51,7 +51,22 @@ void should_parse_expressions(void)
 {
     // given
     // TODO post -- ++ doenst work
-    const char *source = "val x = 10;";
+    const char *source = "val x;";
+    // when
+    AST *ast = parse(source);
+    // then
+    // TEST_CHECK(ast->type == BINARY_EXPRESSION);
+    // TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
+    printf("\n");
+    ast_print(ast);
+    // ast_free(ast);
+}
+
+void should_parse_block(void)
+{
+    // given
+    // TODO post -- ++ doenst work
+    const char *source = "{var x: int8 = 10;var y = 12;val z = x + y;}";
     // when
     AST *ast = parse(source);
     // then
@@ -66,4 +81,5 @@ TEST_LIST = {
     {": Should parse binary expressions", should_parse_binary_expressions},
     {": Should parse complex binary expressions", should_parse_complex_expressions},
     {": Should parse complex binary expressions", should_parse_expressions},
+    {": Should parse block stmt", should_parse_block},
     {NULL, NULL}};

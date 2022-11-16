@@ -5,6 +5,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```
+<block-stmt> ::= "{" <var-declaration>* "}" ;
 <var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* ("=" <expression>)* ";" ;
 <expression> ::= <tenary> ;
 <tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;

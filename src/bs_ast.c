@@ -145,6 +145,9 @@ static void print_type(ast_type type, int depth)
   case VARIABLE_DECLARATOR:
     printf("\"variable-declarator\",\n");
     break;
+  case BLOCK_STMT:
+    printf("\"block-stmt\",\n");
+    break;
   default:
     break;
   }
@@ -255,8 +258,27 @@ static void ast_print_depth(AST *ast, int depth, bool is_last)
     ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).id, depth + 1, false);
     print_tabs(depth + 1);
     printf("\"init\": ");
-    ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, depth + 1, true);
+    if (AST_DATA(ast, VARIABLE_DECLARATOR).init == NULL)
+    {
+      printf("null\n");
+    }
+    else
+    {
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, depth + 1, true);
+    }
     break;
+  case BLOCK_STMT:
+    printf("\"instructionCount\": %d,\n", AST_DATA(ast, BLOCK_STMT).instructionCount);
+    print_tabs(depth + 1);
+    printf("\"instructions\": [");
+
+    for (int i = 0; i < AST_DATA(ast, BLOCK_STMT).instructionCount; i++)
+    {
+      print_tabs(depth + 1);
+      ast_print_depth(AST_DATA(ast, BLOCK_STMT).instructions[i], depth + 1, i == AST_DATA(ast, BLOCK_STMT).instructionCount - 1 ? true : false);
+    }
+    print_tabs(depth + 1);
+    printf("]\n");
   }
   print_tabs(depth);
   printf("}%c\n", is_last ? ' ' : ',');

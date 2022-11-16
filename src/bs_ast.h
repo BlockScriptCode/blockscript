@@ -30,6 +30,8 @@ typedef enum
 
     VARIABLE_DECLARATOR,
     VARIABLE_DECLARATION,
+
+    BLOCK_STMT,
 } ast_type;
 
 typedef enum
@@ -107,6 +109,11 @@ struct AST
             ast_variable_kind kind;
             bs_value_type type;
         } VARIABLE_DECLARATION;
+        struct BLOCK_STMT
+        {
+            int instructionCount;
+            AST **instructions;
+        } BLOCK_STMT;
     } data;
 };
 

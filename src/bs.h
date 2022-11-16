@@ -16,7 +16,8 @@
 
 #define BS_SIGNATURE "\x1brbs"
 
-
-
+// ARGUMENTS
+#define COMPILE 0b00000001
+#define TO_AST 0b00000010
 
 #endif
