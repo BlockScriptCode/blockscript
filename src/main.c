@@ -36,10 +36,6 @@ static char *read_file(const char *path)
 
 static uint8_t parse_flags(int argc, const char *argv[])
 {
-    if (argc == 2)
-    {
-        return COMPILE;
-    }
     uint8_t flags = 0;
     for (int i = 1; i < argc; i++)
     {
@@ -53,6 +49,12 @@ static uint8_t parse_flags(int argc, const char *argv[])
             case 'a':
                 flags |= TO_AST;
                 break;
+            case 'o':
+                flags |= TO_OUTPUT;
+                break;
+            case 'h':
+                flags |= HELP;
+                break;
             default:
                 USAGE_ERROR();
                 exit(64);
@@ -60,6 +62,16 @@ static uint8_t parse_flags(int argc, const char *argv[])
         }
     }
     return flags;
+}
+static void print_help()
+{
+    printf("Usage:\n");
+    printf("bs [-options] [path] [params]\n\n");
+    printf("Options:\n");
+    printf(" -c : option excepting argument.\n");
+    printf(" -a : option without arguments.\n");
+    printf(" -o : option without arguments.\n");
+    printf(" -h : print out command line options.\n\n");
 }
 
 int main(int argc, const char *argv[])
@@ -71,13 +83,25 @@ int main(int argc, const char *argv[])
     else if (argc >= 2)
     {
         uint8_t flags = parse_flags(argc, argv);
-
+        if ((flags & HELP) > 0)
+        {
+            print_help();
+            return 0;
+        }
         char *source = read_file(argv[argc - 1]);
         AST *ast = parse(source);
-
-        if ((flags | TO_AST) > 0)
+        if ((flags & TO_AST) > 0)
         {
-            ast_print(ast);
+            if ((flags & TO_OUTPUT) > 0)
+            {
+                FILE *f = fopen("ast.json", "w");
+                ast_print(ast, f);
+                fclose(f);
+            }
+            else
+            {
+                ast_print(ast, stdout);
+            }
         }
         ast_free(ast);
     }

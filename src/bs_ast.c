@@ -119,45 +119,45 @@ static char *operator_str(ast_operator operator)
   }
 }
 
-static void print_tabs(int depth)
+static void print_tabs(int depth, FILE *output)
 {
   for (int i = 0; i < depth; i++)
-    printf("    ");
+    fprintf(output, "    ");
 }
 
-static void print_type(ast_type type, int depth)
+static void print_type(ast_type type, int depth, FILE *output)
 {
-  printf("{\n");
-  print_tabs(depth);
-  printf("\"type\": ");
+  fprintf(output, "{\n");
+  print_tabs(depth, output);
+  fprintf(output, "\"type\": ");
   switch (type)
   {
   case LITERAL:
-    printf("\"literal\",\n");
+    fprintf(output, "\"literal\",\n");
     break;
   case IDENTIFIER:
-    printf("\"identifier\",\n");
+    fprintf(output, "\"identifier\",\n");
     break;
   case UNARY_EXPRESSION:
-    printf("\"unary-expression\",\n");
+    fprintf(output, "\"unary-expression\",\n");
     break;
   case BINARY_EXPRESSION:
-    printf("\"binary-expression\",\n");
+    fprintf(output, "\"binary-expression\",\n");
     break;
   case CONDITIONAL_EXPRESSION:
-    printf("\"conditional-expression\",\n");
+    fprintf(output, "\"conditional-expression\",\n");
     break;
   case EXPRESSION_STATEMENT:
-    printf("\"expression-statement\",\n");
+    fprintf(output, "\"expression-statement\",\n");
     break;
   case VARIABLE_DECLARATION:
-    printf("\"variable-declaration\",\n");
+    fprintf(output, "\"variable-declaration\",\n");
     break;
   case VARIABLE_DECLARATOR:
-    printf("\"variable-declarator\",\n");
+    fprintf(output, "\"variable-declarator\",\n");
     break;
   case BLOCK_STMT:
-    printf("\"block-stmt\",\n");
+    fprintf(output, "\"block-stmt\",\n");
     break;
   default:
     break;
@@ -190,112 +190,112 @@ static char *get_type_str(bs_value_type type)
   return "unknown";
 }
 
-static void print_literal(bs_value *literal_value, int depth)
+static void print_literal(bs_value *literal_value, int depth, FILE *output)
 {
-  printf("\"data-type\": \"%s\",\n", get_type_str(literal_value->type));
-  print_tabs(depth);
+  fprintf(output, "\"data-type\": \"%s\",\n", get_type_str(literal_value->type));
+  print_tabs(depth, output);
   switch (literal_value->type)
   {
   case BS_BOOL:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_BOOL));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_BOOL));
     break;
   case BS_INT8:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_INT8));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_INT8));
     break;
   case BS_UINT8:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_UINT8));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_UINT8));
     break;
   case BS_INT16:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_INT16));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_INT16));
     break;
   case BS_UINT16:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_UINT16));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_UINT16));
     break;
   case BS_INT32:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_INT32));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_INT32));
     break;
   case BS_UINT32:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_UINT32));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_UINT32));
     break;
   case BS_INT64:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_INT64));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_INT64));
     break;
   case BS_UINT64:
-    printf("\"value\": %d\n", AS_CVAL(literal_value, BS_UINT64));
+    fprintf(output, "\"value\": %d\n", AS_CVAL(literal_value, BS_UINT64));
     break;
   default:
     break;
   }
 }
 
-static void ast_print_depth(AST *ast, int depth, bool is_last)
+static void ast_print_depth(AST *ast, int depth, bool is_last, FILE *output)
 {
   ast_type current_type = ast->type;
-  print_type(current_type, depth + 1);
-  print_tabs(depth + 1);
+  print_type(current_type, depth + 1, output);
+  print_tabs(depth + 1, output);
   switch (current_type)
   {
   case LITERAL:
-    print_literal(AST_DATA(ast, LITERAL).value, depth + 1);
+    print_literal(AST_DATA(ast, LITERAL).value, depth + 1, output);
     break;
   case IDENTIFIER:
-    printf("\"name\": \"%.*s\",\n", AST_DATA(ast, IDENTIFIER).length, AST_DATA(ast, IDENTIFIER).name);
+    fprintf(output, "\"name\": \"%.*s\"\n", AST_DATA(ast, IDENTIFIER).length, AST_DATA(ast, IDENTIFIER).name);
     break;
   case UNARY_EXPRESSION:
-    printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));
-    print_tabs(depth + 1);
-    printf("\"argument\": ");
-    ast_print_depth(AST_DATA(ast, UNARY_EXPRESSION).argument, depth + 1, true);
+    fprintf(output, "\"operator\": %s,\n", operator_str(AST_DATA(ast, UNARY_EXPRESSION).operator));
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"argument\": ");
+    ast_print_depth(AST_DATA(ast, UNARY_EXPRESSION).argument, depth + 1, true, output);
     break;
   case BINARY_EXPRESSION:
-    printf("\"operator\": %s,\n", operator_str(AST_DATA(ast, BINARY_EXPRESSION).operator));
-    print_tabs(depth + 1);
-    printf("\"left\": ");
-    ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).left, depth + 1, false);
-    print_tabs(depth + 1);
-    printf("\"right\": ");
-    ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).right, depth + 1, true);
+    fprintf(output, "\"operator\": %s,\n", operator_str(AST_DATA(ast, BINARY_EXPRESSION).operator));
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"left\": ");
+    ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).left, depth + 1, false, output);
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"right\": ");
+    ast_print_depth(AST_DATA(ast, BINARY_EXPRESSION).right, depth + 1, true, output);
     break;
   case VARIABLE_DECLARATION:
-    printf("\"kind:\" \"%s\",\n", AST_DATA(ast, VARIABLE_DECLARATION).kind == VAL ? "val" : "var");
-    print_tabs(depth + 1);
-    printf("\"type:\" \"%s\",\n", get_type_str(AST_DATA(ast, VARIABLE_DECLARATION).type));
-    print_tabs(depth + 1);
-    printf("\"declaration\": ");
-    ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATION).declaration, depth + 1, true);
+    fprintf(output, "\"kind\": \"%s\",\n", AST_DATA(ast, VARIABLE_DECLARATION).kind == VAL ? "val" : "var");
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"valueType\": \"%s\",\n", get_type_str(AST_DATA(ast, VARIABLE_DECLARATION).type));
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"declaration\": ");
+    ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATION).declaration, depth + 1, true, output);
     break;
   case VARIABLE_DECLARATOR:
-    printf("\"id:\" ");
-    ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).id, depth + 1, false);
-    print_tabs(depth + 1);
-    printf("\"init\": ");
+    fprintf(output, "\"id\": ");
+    ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).id, depth + 1, false, output);
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"init\": ");
     if (AST_DATA(ast, VARIABLE_DECLARATOR).init == NULL)
     {
-      printf("null\n");
+      fprintf(output, "null\n");
     }
     else
     {
-      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, depth + 1, true);
+      ast_print_depth(AST_DATA(ast, VARIABLE_DECLARATOR).init, depth + 1, true, output);
     }
     break;
   case BLOCK_STMT:
-    printf("\"instructionCount\": %d,\n", AST_DATA(ast, BLOCK_STMT).instructionCount);
-    print_tabs(depth + 1);
-    printf("\"instructions\": [");
+    fprintf(output, "\"instructionCount\": %d,\n", AST_DATA(ast, BLOCK_STMT).instructionCount);
+    print_tabs(depth + 1, output);
+    fprintf(output, "\"instructions\": [");
 
     for (int i = 0; i < AST_DATA(ast, BLOCK_STMT).instructionCount; i++)
     {
-      print_tabs(depth + 1);
-      ast_print_depth(AST_DATA(ast, BLOCK_STMT).instructions[i], depth + 1, i == AST_DATA(ast, BLOCK_STMT).instructionCount - 1 ? true : false);
+      print_tabs(depth + 1, output);
+      ast_print_depth(AST_DATA(ast, BLOCK_STMT).instructions[i], depth + 1, i == AST_DATA(ast, BLOCK_STMT).instructionCount - 1 ? true : false, output);
     }
-    print_tabs(depth + 1);
-    printf("]\n");
+    print_tabs(depth + 1, output);
+    fprintf(output, "]\n");
   }
-  print_tabs(depth);
-  printf("}%c\n", is_last ? ' ' : ',');
+  print_tabs(depth, output);
+  fprintf(output, "}%c\n", is_last ? ' ' : ',');
 }
 
-void ast_print(AST *ast)
+void ast_print(AST *ast, FILE *output)
 {
-  ast_print_depth(ast, 0, true);
+  ast_print_depth(ast, 0, true, output);
 }

@@ -3,5 +3,25 @@
     {
         var y = x + 1;
         val z = y * 10 << 1;
+        {
+            var y = x + 1;
+            val z = y * 10 << 1;
+            {
+                var y = x + 1;
+                val z = y * 10 << 1;
+            }
+            {
+                var y = x + 1;
+                val z = y * 10 << 1;
+                {
+                    var y = x + 1;
+                    val z = y * 10 << 1;
+                    {
+                        var y = x + 1;
+                        val z = y * 10 << 1;
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 EXEC = bs.out
-
+CC=gcc
 SRCDIR = src
 OBJDIR = obj
 TESTDIR = tests
@@ -13,7 +13,7 @@ TESTS = $(wildcard $(TESTDIR)/*.c)
 TESTEXEC = $(patsubst $(TESTDIR)/%.c,$(TESTDIR)/$(TESTBIN)/%,$(TESTS))
 
 CFLAGS = -g -Wall
-INCL = -I../include
+INCL = 
 
 build: $(OBJDIR) $(EXEC)
 test: $(OBJDIR) $(TESTDIR)/$(TESTBIN) $(OBJS_NOMAIN) $(TESTEXEC)
@@ -23,13 +23,13 @@ clean:
 	rm -rf $(OBJS) $(TESTEXEC) $(EXEC) $(TESTDIR)/$(TESTBIN)/* $(TESTDIR)/$(TESTBIN) $(OBJDIR)
 
 $(TESTDIR)/$(TESTBIN)/%: $(TESTDIR)/%.c
-	$(CC) $(CFLAGS) $< $(OBJS_NOMAIN) -o $@
+	$(CC) $(CFLAGS) $(INCL) $< $(OBJS_NOMAIN) -o $@
 
 $(EXEC): $(OBJS)
-	$(CC) -o $@ $^
+	$(CC) $(CFLAGS) $(INCL) -o $@ $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCL) -c $< -o $@
 
 $(OBJDIR):
 	mkdir $(OBJDIR)

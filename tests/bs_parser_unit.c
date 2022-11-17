@@ -28,7 +28,7 @@ void should_parse_binary_expressions(void)
     TEST_CHECK(IS_TYPE(literal3, BS_INT32));
     TEST_CHECK(AS_CVAL(literal3, BS_INT32) == 5);
     printf("\n");
-    ast_print(ast);
+    ast_print(ast, stdout);
     ast_free(ast);
 }
 
@@ -43,7 +43,7 @@ void should_parse_complex_expressions(void)
     TEST_CHECK(ast->type == BINARY_EXPRESSION);
     TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator== BIT_OR);
     printf("\n");
-    ast_print(ast);
+    ast_print(ast, stdout);
     ast_free(ast);
 }
 
@@ -58,7 +58,7 @@ void should_parse_expressions(void)
     // TEST_CHECK(ast->type == BINARY_EXPRESSION);
     // TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
     printf("\n");
-    ast_print(ast);
+    ast_print(ast, stdout);
     // ast_free(ast);
 }
 
@@ -73,7 +73,7 @@ void should_parse_block(void)
     // TEST_CHECK(ast->type == BINARY_EXPRESSION);
     // TEST_CHECK(AST_DATA(ast, BINARY_EXPRESSION).operator == BIT_OR);
     printf("\n");
-    ast_print(ast);
+    ast_print(ast, stdout);
     // ast_free(ast);
 }
 

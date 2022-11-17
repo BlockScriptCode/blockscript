@@ -2,6 +2,7 @@
 #define bs_ast_h
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "bs.h"
 #include "bs_lex.h"
 #include "bs_value.h"
@@ -119,6 +120,6 @@ struct AST
 
 AST *ast_new(AST ast);
 void ast_free(AST *ptr);
-void ast_print(AST *ast);
+void ast_print(AST *ast, FILE *output);
 
 #endif
