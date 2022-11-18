@@ -5,6 +5,8 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```
+<program> ::= <declaration>* EOF ;
+
 // Declarations
 <declaration> ::= <class-declaration>
 | <fn-declaration>
