@@ -5,9 +5,54 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```
-<block-stmt> ::= "{" <var-declaration>* "}" ;
+// Declarations
+<declaration> ::= <class-declaration>
+| <fn-declaration>
+| <var-declaration>
+| <statement> ;
+
+<class-declaration> ::= "class" IDENTIFIER ( "<" IDENTIFIER )?
+"{" function* "}" ;
+<fn-declaration> ::= "fn" <function> ;
 <var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* ("=" <expression>)* ";" ;
-<expression> ::= <tenary> ;
+
+// Statements
+<statement> ::= <expr-stmt>
+| <for-stmt>
+| <if-stmt>
+| <return-stmt>
+| <while-stmt>
+| <block-stmt> ;
+
+
+<expr-stmt> ::= <expression> ";" ;
+<for-stmt> ::= "for" "(" ( <var-declaration> | <expr-stmt> | ";" ) <expression>? ";" <expression>? ")" <statement> ;
+<if-stmt> ::= "if" "(" <expression> ")" <statement> ( "else" <statement> )? ;
+<return-stmt> ::= "return" <expression>? ";" ;
+<while-stmt> ::= "while" "(" <expression> ")" <statement> ;
+<block-stmt> ::= "{" <declaration>* "}" ;
+
+
+// Expressions
+
+expression → assignment ;
+assignment → ( call "." )? IDENTIFIER "=" assignment
+| logic_or ;
+logic_or → logic_and ( "or" logic_and )* ;
+logic_and → equality ( "and" equality )* ;
+equality → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term → factor ( ( "-" | "+" ) factor )* ;
+factor → unary ( ( "/" | "*" ) unary )* ;
+unary → ( "!" | "-" ) unary | call ;
+call → primary ( "(" arguments? ")" | "." IDENTIFIER )* ;
+primary → "true" | "false" | "nil" | "this"
+| NUMBER | STRING | IDENTIFIER | "(" expression ")"
+| "super" "." IDENTIFIER ;
+
+<expression> ::= <assignment> ;
+<assignment> ::= (call ".")? IDENTIFIER "=" <assignment> | <tenary> ;
+<call> ::= <primary> ( "(" <arguments>? ")" | "." IDENTIFER )* ;
 <tenary> ::= <bitwise-inc-or> "?" <expression> ":" <expression> ;
 <bitwise-inc-or> ::= <bitwise-exc-or> ("|" <bitwise-exc-or>) ;
 <bitwise-exc-or> ::= <bitwise-and> ("^" <bitwise-and>)* ;
@@ -21,7 +66,19 @@ Blockscript is a general purpose scripting language which can be used to write B
 <pos-unary> ::= <primary> ("--" | "++")*
 <type-identifer> ::= "int8" | "u_int8" | "int16" | "u_int16" | "int32" | "u_int32" 
                     | "int64" | "u_int64" | "float32" | "float64" | "bool" | "string" | IDENTIFIER ;
-<primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" ;
+<primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" | "super" "." IDENTIFER | this ;
+
+// Utilities
+<function> ::= IDENTIFIER "(" <parameters>? ")" <block-stmt> ;
+<parameters> ::= IDENTIFIER ( "," IDENTIFIER )* ;
+<arguments> ::= <expression> ( "," <expression> )* ;
+
+// Terminals
+NUMBER → DIGIT+ ( "." DIGIT+ )? ;
+STRING → "\"" <any char except "\"">* "\"" ;
+IDENTIFIER → ALPHA ( ALPHA | DIGIT )* ;
+ALPHA → "a" ... "z" | "A" ... "Z" | "_" ;
+DIGIT → "0" ... "9" ;
 ```
 
 ## Precendece 
