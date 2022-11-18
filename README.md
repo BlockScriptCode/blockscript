@@ -5,9 +5,12 @@ Blockscript is a general purpose scripting language which can be used to write B
 ## Grammar Backus-Naur-Form
 
 ```xml
+<!-- Program -->
+
 <program> ::= <declaration>* EOF ;
 
-// Declarations
+<!-- Declarations -->
+
 <declaration> ::= <class-declaration>
 | <fn-declaration>
 | <var-declaration>
@@ -18,7 +21,8 @@ Blockscript is a general purpose scripting language which can be used to write B
 <fn-declaration> ::= "fn" <function> ;
 <var-declaration> ::= ("var" | "val") IDENTIFIER (":" <type-identifer>)* ("=" <expression>)* ";" ;
 
-// Statements
+<!-- Statements --> 
+
 <statement> ::= <expr-stmt>
 | <for-stmt>
 | <if-stmt>
@@ -35,7 +39,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 <block-stmt> ::= "{" <declaration>* "}" ;
 
 
-// Expressions
+<!-- Expressions -->
 
 <expression> ::= <assignment> ;
 <assignment> ::= (call ".")? IDENTIFIER "=" <assignment> | <tenary> ;
@@ -51,21 +55,41 @@ Blockscript is a general purpose scripting language which can be used to write B
 <factor> ::= <unary> (("*" | "/" | "%") <unary>)* ;
 <pre-unary> ::= ( "-" | "!" | "~" | "++" | "--") <pre-unary> | <pos-unary> ;
 <pos-unary> ::= <primary> ("--" | "++")*
-<type-identifer> ::= "int8" | "u_int8" | "int16" | "u_int16" | "int32" | "u_int32" 
-                    | "int64" | "u_int64" | "float32" | "float64" | "bool" | "string" | IDENTIFIER ;
-<primary> ::= NUMBER | STRING | "true" | "false" | "null" | "(" expression ")" | "super" "." IDENTIFER | this ;
+<type-identifer> ::= "int8" 
+                    | "u_int8"
+                    | "int16" 
+                    | "u_int16" 
+                    | "int32" 
+                    | "u_int32" 
+                    | "int64" 
+                    | "u_int64" 
+                    | "float32" 
+                    | "float64" 
+                    | "bool" 
+                    | "string" 
+                    | IDENTIFIER ;
+<primary> ::= NUMBER 
+            | STRING 
+            | "true" 
+            | "false" 
+            | "null" 
+            | "(" expression ")" 
+            | "super" "." IDENTIFER 
+            | this ;
 
-// Utilities
+<!-- Utilities -->
+
 <function> ::= IDENTIFIER "(" <parameters>? ")" <block-stmt> ;
 <parameters> ::= IDENTIFIER ( "," IDENTIFIER )* ;
 <arguments> ::= <expression> ( "," <expression> )* ;
 
-// Terminals
-NUMBER → DIGIT+ ( "." DIGIT+ )? ;
-STRING → "\"" <any char except "\"">* "\"" ;
-IDENTIFIER → ALPHA ( ALPHA | DIGIT )* ;
-ALPHA → "a" ... "z" | "A" ... "Z" | "_" ;
-DIGIT → "0" ... "9" ;
+<!-- Terminals -->
+
+NUMBER ::= DIGIT+ ( "." DIGIT+ )? ;
+STRING ::= "\"" <any char except "\"">* "\"" ;
+IDENTIFIER ::= ALPHA ( ALPHA | DIGIT )* ;
+ALPHA ::= "a" ... "z" | "A" ... "Z" | "_" ;
+DIGIT ::= "0" ... "9" ;
 ```
 
 ## Precendece 
