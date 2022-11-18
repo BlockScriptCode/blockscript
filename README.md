@@ -4,7 +4,7 @@ Blockscript is a general purpose scripting language which can be used to write B
 
 ## Grammar Backus-Naur-Form
 
-```
+```xml
 <program> ::= <declaration>* EOF ;
 
 // Declarations
@@ -36,21 +36,6 @@ Blockscript is a general purpose scripting language which can be used to write B
 
 
 // Expressions
-
-expression → assignment ;
-assignment → ( call "." )? IDENTIFIER "=" assignment
-| logic_or ;
-logic_or → logic_and ( "or" logic_and )* ;
-logic_and → equality ( "and" equality )* ;
-equality → comparison ( ( "!=" | "==" ) comparison )* ;
-comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
-term → factor ( ( "-" | "+" ) factor )* ;
-factor → unary ( ( "/" | "*" ) unary )* ;
-unary → ( "!" | "-" ) unary | call ;
-call → primary ( "(" arguments? ")" | "." IDENTIFIER )* ;
-primary → "true" | "false" | "nil" | "this"
-| NUMBER | STRING | IDENTIFIER | "(" expression ")"
-| "super" "." IDENTIFIER ;
 
 <expression> ::= <assignment> ;
 <assignment> ::= (call ".")? IDENTIFIER "=" <assignment> | <tenary> ;
